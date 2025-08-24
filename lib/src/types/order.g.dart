@@ -1,0 +1,84 @@
+// GENERATED CODE - DO NOT MODIFY BY HAND
+
+part of 'order.dart';
+
+// **************************************************************************
+// JsonSerializableGenerator
+// **************************************************************************
+
+_$OrderRequestImpl _$$OrderRequestImplFromJson(Map<String, dynamic> json) =>
+    _$OrderRequestImpl(
+      coin: json['coin'] as String,
+      isBuy: json['isBuy'] as bool,
+      sz: (json['sz'] as num).toDouble(),
+      limitPx: (json['limitPx'] as num).toDouble(),
+      orderType: OrderType.fromJson(json['orderType'] as Map<String, dynamic>),
+      reduceOnly: json['reduceOnly'] as bool,
+      cloid: json['cloid'] as String?,
+    );
+
+Map<String, dynamic> _$$OrderRequestImplToJson(_$OrderRequestImpl instance) =>
+    <String, dynamic>{
+      'coin': instance.coin,
+      'isBuy': instance.isBuy,
+      'sz': instance.sz,
+      'limitPx': instance.limitPx,
+      'orderType': instance.orderType,
+      'reduceOnly': instance.reduceOnly,
+      'cloid': instance.cloid,
+    };
+
+_$LimitOrderTypeImpl _$$LimitOrderTypeImplFromJson(Map<String, dynamic> json) =>
+    _$LimitOrderTypeImpl(
+      LimitOrderType.fromJson(json['limit'] as Map<String, dynamic>),
+      $type: json['runtimeType'] as String?,
+    );
+
+Map<String, dynamic> _$$LimitOrderTypeImplToJson(
+        _$LimitOrderTypeImpl instance) =>
+    <String, dynamic>{
+      'limit': instance.limit,
+      'runtimeType': instance.$type,
+    };
+
+_$TriggerOrderTypeImpl _$$TriggerOrderTypeImplFromJson(
+        Map<String, dynamic> json) =>
+    _$TriggerOrderTypeImpl(
+      TriggerOrderType.fromJson(json['trigger'] as Map<String, dynamic>),
+      $type: json['runtimeType'] as String?,
+    );
+
+Map<String, dynamic> _$$TriggerOrderTypeImplToJson(
+        _$TriggerOrderTypeImpl instance) =>
+    <String, dynamic>{
+      'trigger': instance.trigger,
+      'runtimeType': instance.$type,
+    };
+
+_$LimitOrderTypeDataImpl _$$LimitOrderTypeDataImplFromJson(
+        Map<String, dynamic> json) =>
+    _$LimitOrderTypeDataImpl(
+      tif: json['tif'] as String,
+    );
+
+Map<String, dynamic> _$$LimitOrderTypeDataImplToJson(
+        _$LimitOrderTypeDataImpl instance) =>
+    <String, dynamic>{
+      'tif': instance.tif,
+    };
+
+_$TriggerOrderTypeDataImpl _$$TriggerOrderTypeDataImplFromJson(
+        Map<String, dynamic> json) =>
+    _$TriggerOrderTypeDataImpl(
+      isMarket: json['isMarket'] as bool,
+      triggerPx: (json['triggerPx'] as num).toDouble(),
+      tpsl: json['tpsl'] as String,
+    );
+
+Map<String, dynamic> _$$TriggerOrderTypeDataImplToJson(
+        _$TriggerOrderTypeDataImpl instance) =>
+    <String, dynamic>{
+      'isMarket': instance.isMarket,
+      'triggerPx': instance.triggerPx,
+      'tpsl': instance.tpsl,
+    };

@@ -1,0 +1,22 @@
+include: package:lints/recommended.yaml
+
+analyzer:
+  language:
+    strict-casts: true
+    strict-inference: true
+    strict-raw-types: true
+  exclude:
+    - build/**
+    - '**/*.g.dart'
+    - '**/*.freezed.dart'
+
+linter:
+  rules:
+    - avoid_print
+    - prefer_const_constructors
+    - prefer_final_locals
+    - always_declare_return_types
+    - directives_ordering
+    - sort_constructors_first
+    - use_super_parameters
+    - unawaited_futures

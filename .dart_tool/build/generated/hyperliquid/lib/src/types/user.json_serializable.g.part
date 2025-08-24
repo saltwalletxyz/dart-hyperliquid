@@ -1,0 +1,113 @@
+// **************************************************************************
+// JsonSerializableGenerator
+// **************************************************************************
+
+_$UserStateImpl _$$UserStateImplFromJson(Map<String, dynamic> json) =>
+    _$UserStateImpl(
+      withdrawable: (json['withdrawable'] as num).toDouble(),
+      crossMaintenanceMarginUsed:
+          (json['crossMaintenanceMarginUsed'] as num).toDouble(),
+      assetPositions: (json['assetPositions'] as List<dynamic>)
+          .map((e) => AssetPosition.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      crossMarginSummary: MarginSummary.fromJson(
+          json['crossMarginSummary'] as Map<String, dynamic>),
+      marginSummary:
+          MarginSummary.fromJson(json['marginSummary'] as Map<String, dynamic>),
+      time: (json['time'] as num).toInt(),
+    );
+
+Map<String, dynamic> _$$UserStateImplToJson(_$UserStateImpl instance) =>
+    <String, dynamic>{
+      'withdrawable': instance.withdrawable,
+      'crossMaintenanceMarginUsed': instance.crossMaintenanceMarginUsed,
+      'assetPositions': instance.assetPositions,
+      'crossMarginSummary': instance.crossMarginSummary,
+      'marginSummary': instance.marginSummary,
+      'time': instance.time,
+    };
+
+_$AssetPositionImpl _$$AssetPositionImplFromJson(Map<String, dynamic> json) =>
+    _$AssetPositionImpl(
+      position: Position.fromJson(json['position'] as Map<String, dynamic>),
+      type: json['type'] as String,
+    );
+
+Map<String, dynamic> _$$AssetPositionImplToJson(_$AssetPositionImpl instance) =>
+    <String, dynamic>{
+      'position': instance.position,
+      'type': instance.type,
+    };
+
+_$PositionImpl _$$PositionImplFromJson(Map<String, dynamic> json) =>
+    _$PositionImpl(
+      coin: json['coin'] as String,
+      entryPx: (json['entryPx'] as num).toDouble(),
+      leverage: Leverage.fromJson(json['leverage'] as Map<String, dynamic>),
+      liquidationPx: (json['liquidationPx'] as num).toDouble(),
+      marginUsed: (json['marginUsed'] as num).toDouble(),
+      positionValue: (json['positionValue'] as num).toDouble(),
+      returnOnEquity: (json['returnOnEquity'] as num).toDouble(),
+      szi: (json['szi'] as num).toDouble(),
+      unrealizedPnl: (json['unrealizedPnl'] as num).toDouble(),
+      maxLeverage: (json['maxLeverage'] as num).toInt(),
+      cumFunding:
+          CumFunding.fromJson(json['cumFunding'] as Map<String, dynamic>),
+    );
+
+Map<String, dynamic> _$$PositionImplToJson(_$PositionImpl instance) =>
+    <String, dynamic>{
+      'coin': instance.coin,
+      'entryPx': instance.entryPx,
+      'leverage': instance.leverage,
+      'liquidationPx': instance.liquidationPx,
+      'marginUsed': instance.marginUsed,
+      'positionValue': instance.positionValue,
+      'returnOnEquity': instance.returnOnEquity,
+      'szi': instance.szi,
+      'unrealizedPnl': instance.unrealizedPnl,
+      'maxLeverage': instance.maxLeverage,
+      'cumFunding': instance.cumFunding,
+    };
+
+_$LeverageImpl _$$LeverageImplFromJson(Map<String, dynamic> json) =>
+    _$LeverageImpl(
+      type: json['type'] as String,
+      value: (json['value'] as num).toInt(),
+    );
+
+Map<String, dynamic> _$$LeverageImplToJson(_$LeverageImpl instance) =>
+    <String, dynamic>{
+      'type': instance.type,
+      'value': instance.value,
+    };
+
+_$CumFundingImpl _$$CumFundingImplFromJson(Map<String, dynamic> json) =>
+    _$CumFundingImpl(
+      allTime: (json['allTime'] as num).toDouble(),
+      sinceOpen: (json['sinceOpen'] as num).toDouble(),
+      sinceChange: (json['sinceChange'] as num).toDouble(),
+    );
+
+Map<String, dynamic> _$$CumFundingImplToJson(_$CumFundingImpl instance) =>
+    <String, dynamic>{
+      'allTime': instance.allTime,
+      'sinceOpen': instance.sinceOpen,
+      'sinceChange': instance.sinceChange,
+    };
+
+_$MarginSummaryImpl _$$MarginSummaryImplFromJson(Map<String, dynamic> json) =>
+    _$MarginSummaryImpl(
+      accountValue: (json['accountValue'] as num).toDouble(),
+      totalMarginUsed: (json['totalMarginUsed'] as num).toDouble(),
+      totalNtlPos: (json['totalNtlPos'] as num).toDouble(),
+      totalRawUsd: (json['totalRawUsd'] as num).toDouble(),
+    );
+
+Map<String, dynamic> _$$MarginSummaryImplToJson(_$MarginSummaryImpl instance) =>
+    <String, dynamic>{
+      'accountValue': instance.accountValue,
+      'totalMarginUsed': instance.totalMarginUsed,
+      'totalNtlPos': instance.totalNtlPos,
+      'totalRawUsd': instance.totalRawUsd,
+    };
