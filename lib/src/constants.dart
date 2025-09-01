@@ -70,6 +70,11 @@ enum InfoType {
   userToMultiSigSigners,
   builderFeeApproval,
   userOrderHistory,
+  leaderboard,
+  hyperliquidStats,
+  bbo,
+  marketStats,
+  liquidations,
 }
 
 

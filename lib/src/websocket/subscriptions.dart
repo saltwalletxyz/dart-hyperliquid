@@ -236,6 +236,273 @@ class WebSocketSubscriptions {
     }
   }
 
+  /// Subscribe to all mids updates
+  Future<void> subscribeToAllMids(Function callback) async {
+    await subscribe('allMids', callback);
+  }
+
+  /// Unsubscribe from all mids updates
+  Future<void> unsubscribeFromAllMids() async {
+    await unsubscribe('allMids');
+  }
+
+  /// Subscribe to user notifications
+  Future<void> subscribeToNotification(String user, Function callback) async {
+    await subscribe('notification', callback, {'user': user});
+  }
+
+  /// Unsubscribe from user notifications
+  Future<void> unsubscribeFromNotification(String user) async {
+    await unsubscribe('notification');
+  }
+
+  /// Subscribe to web data 2 updates
+  Future<void> subscribeToWebData2(String user, Function callback) async {
+    await subscribe('webData2', callback, {'user': user});
+  }
+
+  /// Unsubscribe from web data 2 updates
+  Future<void> unsubscribeFromWebData2(String user) async {
+    await unsubscribe('webData2');
+  }
+
+  /// Subscribe to candle updates
+  Future<void> subscribeToCandle(String coin, String interval, Function callback) async {
+    final convertedCoin = await symbolConversion.convertSymbol(coin, 'reverse');
+    await subscribe('candle', callback, {'coin': convertedCoin, 'interval': interval});
+  }
+
+  /// Unsubscribe from candle updates
+  Future<void> unsubscribeFromCandle(String coin, String interval) async {
+    await unsubscribe('candle');
+  }
+
+  /// Subscribe to L2 order book updates
+  Future<void> subscribeToL2Book(String coin, Function callback) async {
+    final convertedCoin = await symbolConversion.convertSymbol(coin, 'reverse');
+    await subscribe('l2Book', callback, {'coin': convertedCoin});
+  }
+
+  /// Unsubscribe from L2 order book updates
+  Future<void> unsubscribeFromL2Book(String coin) async {
+    await unsubscribe('l2Book');
+  }
+
+  /// Subscribe to trades
+  Future<void> subscribeToTrades(String coin, Function callback) async {
+    final convertedCoin = await symbolConversion.convertSymbol(coin, 'reverse');
+    await subscribe('trades', callback, {'coin': convertedCoin});
+  }
+
+  /// Unsubscribe from trades
+  Future<void> unsubscribeFromTrades(String coin) async {
+    await unsubscribe('trades');
+  }
+
+  /// Subscribe to order updates
+  Future<void> subscribeToOrderUpdates(String user, Function callback) async {
+    await subscribe('orderUpdates', callback, {'user': user});
+  }
+
+  /// Unsubscribe from order updates
+  Future<void> unsubscribeFromOrderUpdates(String user) async {
+    await unsubscribe('orderUpdates');
+  }
+
+  /// Subscribe to user events
+  Future<void> subscribeToUserEvents(String user, Function callback) async {
+    await subscribe('userEvents', callback, {'user': user});
+  }
+
+  /// Unsubscribe from user events
+  Future<void> unsubscribeFromUserEvents(String user) async {
+    await unsubscribe('userEvents');
+  }
+
+  /// Subscribe to user fills
+  Future<void> subscribeToUserFills(String user, Function callback) async {
+    await subscribe('userFills', callback, {'user': user});
+  }
+
+  /// Unsubscribe from user fills
+  Future<void> unsubscribeFromUserFills(String user) async {
+    await unsubscribe('userFills');
+  }
+
+  /// Subscribe to user fundings
+  Future<void> subscribeToUserFundings(String user, Function callback) async {
+    await subscribe('userFundings', callback, {'user': user});
+  }
+
+  /// Unsubscribe from user fundings
+  Future<void> unsubscribeFromUserFundings(String user) async {
+    await unsubscribe('userFundings');
+  }
+
+  /// Subscribe to user non-funding ledger updates
+  Future<void> subscribeToUserNonFundingLedgerUpdates(String user, Function callback) async {
+    await subscribe('userNonFundingLedgerUpdates', callback, {'user': user});
+  }
+
+  /// Unsubscribe from user non-funding ledger updates
+  Future<void> unsubscribeFromUserNonFundingLedgerUpdates(String user) async {
+    await unsubscribe('userNonFundingLedgerUpdates');
+  }
+
+  /// Subscribe to user active asset data
+  Future<void> subscribeToUserActiveAssetData(String user, String coin, Function callback) async {
+    final convertedCoin = await symbolConversion.convertSymbol(coin, 'reverse');
+    await subscribe('activeAssetData', callback, {'user': user, 'coin': convertedCoin});
+  }
+
+  /// Unsubscribe from user active asset data
+  Future<void> unsubscribeFromUserActiveAssetData(String user, String coin) async {
+    await unsubscribe('activeAssetData');
+  }
+
+  /// Subscribe to active asset context
+  Future<void> subscribeToActiveAssetCtx(String coin, Function callback) async {
+    final convertedCoin = await symbolConversion.convertSymbol(coin, 'reverse');
+    await subscribe('activeAssetCtx', callback, {'coin': convertedCoin});
+  }
+
+  /// Unsubscribe from active asset context
+  Future<void> unsubscribeFromActiveAssetCtx(String coin) async {
+    await unsubscribe('activeAssetCtx');
+  }
+
+  /// Subscribe to TWAP history
+  Future<void> subscribeToTwapHistory(String user, Function callback) async {
+    await subscribe('twapHistory', callback, {'user': user});
+  }
+
+  /// Unsubscribe from TWAP history
+  Future<void> unsubscribeFromTwapHistory(String user) async {
+    await unsubscribe('twapHistory');
+  }
+
+  /// Subscribe to TWAP slice fills
+  Future<void> subscribeToTwapSliceFills(String user, Function callback) async {
+    await subscribe('twapSliceFills', callback, {'user': user});
+  }
+
+  /// Unsubscribe from TWAP slice fills
+  Future<void> unsubscribeFromTwapSliceFills(String user) async {
+    await unsubscribe('twapSliceFills');
+  }
+
+  // ==================== ADDITIONAL SUBSCRIPTION TYPES ====================
+  
+  /// Subscribe to BBO (Best Bid/Offer) stream
+  /// This provides the best bid and offer prices for a specific coin
+  Future<void> subscribeToBBO(String coin, Function callback) async {
+    final convertedCoin = await symbolConversion.convertSymbol(coin, 'reverse');
+    await subscribe('bbo', callback, {'coin': convertedCoin});
+  }
+
+  /// Unsubscribe from BBO stream
+  Future<void> unsubscribeFromBBO(String coin) async {
+    await unsubscribe('bbo');
+  }
+
+  /// Subscribe to user positions
+  /// Provides real-time updates on user position changes
+  Future<void> subscribeToUserPositions(String user, Function callback) async {
+    await subscribe('userPositions', callback, {'user': user});
+  }
+
+  /// Unsubscribe from user positions
+  Future<void> unsubscribeFromUserPositions(String user) async {
+    await unsubscribe('userPositions');
+  }
+
+  /// Subscribe to user balance updates
+  /// Provides real-time balance changes for cross/isolated margin
+  Future<void> subscribeToUserBalances(String user, Function callback) async {
+    await subscribe('userBalances', callback, {'user': user});
+  }
+
+  /// Unsubscribe from user balance updates  
+  Future<void> unsubscribeFromUserBalances(String user) async {
+    await unsubscribe('userBalances');
+  }
+
+  /// Subscribe to market mid-price for a specific coin
+  /// Alternative to allMids for single coin tracking
+  Future<void> subscribeToMid(String coin, Function callback) async {
+    final convertedCoin = await symbolConversion.convertSymbol(coin, 'reverse');
+    await subscribe('mid', callback, {'coin': convertedCoin});
+  }
+
+  /// Unsubscribe from specific coin mid-price
+  Future<void> unsubscribeFromMid(String coin) async {
+    await unsubscribe('mid');
+  }
+
+  /// Subscribe to user funding history
+  /// Provides real-time funding payments for perpetual positions
+  Future<void> subscribeToUserFundingHistory(String user, Function callback) async {
+    await subscribe('userFundingHistory', callback, {'user': user});
+  }
+
+  /// Unsubscribe from user funding history
+  Future<void> unsubscribeFromUserFundingHistory(String user) async {
+    await unsubscribe('userFundingHistory');
+  }
+
+  /// Subscribe to oracle prices
+  /// Provides oracle price data for mark price calculations
+  Future<void> subscribeToOraclePrices(String coin, Function callback) async {
+    final convertedCoin = await symbolConversion.convertSymbol(coin, 'reverse');
+    await subscribe('oraclePrices', callback, {'coin': convertedCoin});
+  }
+
+  /// Unsubscribe from oracle prices
+  Future<void> unsubscribeFromOraclePrices(String coin) async {
+    await unsubscribe('oraclePrices');
+  }
+
+  /// Subscribe to funding rates
+  /// Provides real-time funding rate updates
+  Future<void> subscribeToFundingRates(String coin, Function callback) async {
+    final convertedCoin = await symbolConversion.convertSymbol(coin, 'reverse');
+    await subscribe('fundingRates', callback, {'coin': convertedCoin});
+  }
+
+  /// Unsubscribe from funding rates
+  Future<void> unsubscribeFromFundingRates(String coin) async {
+    await unsubscribe('fundingRates');
+  }
+
+  /// Subscribe to liquidation events
+  /// Provides real-time liquidation data for market analysis
+  Future<void> subscribeToLiquidations(String coin, Function callback) async {
+    final convertedCoin = await symbolConversion.convertSymbol(coin, 'reverse');
+    await subscribe('liquidations', callback, {'coin': convertedCoin});
+  }
+
+  /// Unsubscribe from liquidation events
+  Future<void> unsubscribeFromLiquidations(String coin) async {
+    await unsubscribe('liquidations');
+  }
+
+  /// Subscribe to order book snapshots
+  /// Provides periodic full order book snapshots
+  Future<void> subscribeToOrderBookSnapshot(String coin, Function callback, {int? nSigFigs, int? mantissa}) async {
+    final convertedCoin = await symbolConversion.convertSymbol(coin, 'reverse');
+    final params = <String, dynamic>{'coin': convertedCoin};
+    
+    if (nSigFigs != null) params['nSigFigs'] = nSigFigs;
+    if (mantissa != null) params['mantissa'] = mantissa;
+    
+    await subscribe('orderBookSnapshot', callback, params);
+  }
+
+  /// Unsubscribe from order book snapshots
+  Future<void> unsubscribeFromOrderBookSnapshot(String coin) async {
+    await unsubscribe('orderBookSnapshot');
+  }
+
   /// Get list of active subscriptions
   List<String> getActiveSubscriptions() {
     return _activeSubscriptions.keys.toList();

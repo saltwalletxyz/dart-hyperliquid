@@ -304,4 +304,291 @@ class CustomOperations {
       rethrow;
     }
   }
+
+  // ==================== ADDITIONAL TRADING UTILITIES ====================
+
+  /// Get the current position for a specific symbol
+  ///
+  /// [symbol] - Trading symbol to check
+  /// Returns position data or null if no position exists
+  Future<Map<String, dynamic>?> getPosition(String symbol) async {
+    final convertedSymbol = await _symbolConversion.convertSymbol(symbol);
+    final address = _getUserAddress();
+    
+    final positions = await _infoApi.perpetualsAPI.getClearinghouseState(address);
+    if (positions == null || positions['assetPositions'] == null) {
+      return null;
+    }
+
+    final assetPositions = positions['assetPositions'] as List;
+    for (final positionData in assetPositions) {
+      final posMap = positionData as Map<String, dynamic>;
+      final position = posMap['position'] as Map<String, dynamic>;
+      if (position['coin'] == convertedSymbol) {
+        return Map<String, dynamic>.from(position);
+      }
+    }
+    return null;
+  }
+
+  /// Get all current positions
+  ///
+  /// Returns a list of position data
+  Future<List<Map<String, dynamic>>> getAllPositions() async {
+    final address = _getUserAddress();
+    final positions = await _infoApi.perpetualsAPI.getClearinghouseState(address);
+    
+    if (positions == null || positions['assetPositions'] == null) {
+      return [];
+    }
+
+    final assetPositions = positions['assetPositions'] as List;
+    final result = <Map<String, dynamic>>[];
+    
+    for (final positionData in assetPositions) {
+      final posMap = positionData as Map<String, dynamic>;
+      final position = posMap['position'] as Map<String, dynamic>;
+      final szi = double.parse(position['szi'].toString());
+      
+      if (szi != 0) {
+        // Add user-friendly symbol
+        final userSymbol = await _symbolConversion.convertSymbol(
+          position['coin'].toString(),
+          'reverse',
+        );
+        final positionCopy = Map<String, dynamic>.from(position);
+        positionCopy['userSymbol'] = userSymbol;
+        result.add(positionCopy);
+      }
+    }
+    
+    return result;
+  }
+
+  /// Place a stop-loss order
+  ///
+  /// [symbol] - Trading symbol
+  /// [stopPrice] - Price at which to trigger the stop-loss
+  /// [size] - Optional size, defaults to entire position
+  /// [cloid] - Optional client order ID
+  Future<dynamic> placeStopLoss(
+    String symbol,
+    double stopPrice, {
+    double? size,
+    String? cloid,
+  }) async {
+    final position = await getPosition(symbol);
+    if (position == null) {
+      throw Exception('No position found for $symbol');
+    }
+    
+    final szi = double.parse(position['szi'].toString());
+    if (szi == 0) {
+      throw Exception('No position to stop-loss for $symbol');
+    }
+    
+    final orderSize = size ?? szi.abs();
+    final isBuy = szi < 0; // Buy to close short, sell to close long
+    
+    final convertedSymbol = await _symbolConversion.convertSymbol(symbol);
+    
+    final orderRequest = {
+      'coin': convertedSymbol,
+      'is_buy': isBuy,
+      'sz': orderSize,
+      'limit_px': stopPrice,
+      'order_type': {
+        'trigger': {
+          'triggerPx': stopPrice,
+          'isMarket': false,
+          'tpsl': isBuy ? 'sl' : 'tp',
+        }
+      },
+      'reduce_only': true,
+    };
+
+    if (cloid != null) {
+      orderRequest['cloid'] = cloid;
+    }
+
+    return await _exchange.placeOrder(orderRequest);
+  }
+
+  /// Place a take-profit order
+  ///
+  /// [symbol] - Trading symbol
+  /// [targetPrice] - Price at which to take profit
+  /// [size] - Optional size, defaults to entire position
+  /// [cloid] - Optional client order ID
+  Future<dynamic> placeTakeProfit(
+    String symbol,
+    double targetPrice, {
+    double? size,
+    String? cloid,
+  }) async {
+    final position = await getPosition(symbol);
+    if (position == null) {
+      throw Exception('No position found for $symbol');
+    }
+    
+    final szi = double.parse(position['szi'].toString());
+    if (szi == 0) {
+      throw Exception('No position to take-profit for $symbol');
+    }
+    
+    final orderSize = size ?? szi.abs();
+    final isBuy = szi < 0; // Buy to close short, sell to close long
+    
+    final convertedSymbol = await _symbolConversion.convertSymbol(symbol);
+    
+    final orderRequest = {
+      'coin': convertedSymbol,
+      'is_buy': isBuy,
+      'sz': orderSize,
+      'limit_px': targetPrice,
+      'order_type': {
+        'trigger': {
+          'triggerPx': targetPrice,
+          'isMarket': false,
+          'tpsl': isBuy ? 'tp' : 'sl',
+        }
+      },
+      'reduce_only': true,
+    };
+
+    if (cloid != null) {
+      orderRequest['cloid'] = cloid;
+    }
+
+    return await _exchange.placeOrder(orderRequest);
+  }
+
+  /// Cancel all orders for a specific symbol
+  ///
+  /// [symbol] - Symbol to cancel orders for
+  /// Returns the cancel response
+  Future<dynamic> cancelOrdersForSymbol(String symbol) async {
+    final convertedSymbol = await _symbolConversion.convertSymbol(symbol);
+    final address = _getUserAddress();
+    final openOrdersResponse = await _infoApi.getUserOpenOrders(address);
+
+    if (openOrdersResponse == null) {
+      throw Exception('No orders to cancel for $symbol');
+    }
+
+    final userOpenOrders = openOrdersResponse as dynamic;
+    final orders = userOpenOrders.orders as List?;
+    
+    if (orders == null || orders.isEmpty) {
+      throw Exception('No orders to cancel for $symbol');
+    }
+
+    final ordersToCancel = <Map<String, dynamic>>[];
+    for (final order in orders) {
+      final orderMap = order as Map<String, dynamic>;
+      if (orderMap['coin'] == convertedSymbol) {
+        ordersToCancel.add({
+          'coin': convertedSymbol,
+          'o': orderMap['oid'],
+        });
+      }
+    }
+
+    if (ordersToCancel.isEmpty) {
+      throw Exception('No orders found for $symbol');
+    }
+
+    return await _exchange.cancelOrder({'cancels': ordersToCancel});
+  }
+
+  /// Calculate unrealized PnL for all positions
+  ///
+  /// Returns total unrealized PnL
+  Future<double> getUnrealizedPnL() async {
+    final address = _getUserAddress();
+    final clearingState = await _infoApi.perpetualsAPI.getClearinghouseState(address);
+    
+    if (clearingState == null || clearingState['marginSummary'] == null) {
+      return 0.0;
+    }
+    
+    return double.parse(clearingState['marginSummary']['unrealizedPnl'].toString());
+  }
+
+  /// Get account equity
+  ///
+  /// Returns total account equity
+  Future<double> getAccountEquity() async {
+    final address = _getUserAddress();
+    final clearingState = await _infoApi.perpetualsAPI.getClearinghouseState(address);
+    
+    if (clearingState == null || clearingState['marginSummary'] == null) {
+      return 0.0;
+    }
+    
+    return double.parse(clearingState['marginSummary']['accountValue'].toString());
+  }
+
+  /// Get available balance for trading
+  ///
+  /// Returns available balance
+  Future<double> getAvailableBalance() async {
+    final address = _getUserAddress();
+    final clearingState = await _infoApi.perpetualsAPI.getClearinghouseState(address);
+    
+    if (clearingState == null || clearingState['withdrawable'] == null) {
+      return 0.0;
+    }
+    
+    return double.parse(clearingState['withdrawable'].toString());
+  }
+
+  /// Place multiple orders at once with optimal batching
+  ///
+  /// [orders] - List of order specifications
+  /// [grouping] - Grouping strategy for batch orders
+  /// Returns batch order response
+  Future<dynamic> placeBatchOrders(
+    List<Map<String, dynamic>> orders, [
+    String grouping = 'na',
+  ]) async {
+    // Convert symbols in all orders
+    for (final order in orders) {
+      if (order.containsKey('coin')) {
+        final coin = order['coin']?.toString();
+        if (coin != null) {
+          order['coin'] = await _symbolConversion.convertSymbol(coin);
+        }
+      }
+    }
+
+    return await _exchange.placeOrder({
+      'orders': orders,
+      'grouping': grouping,
+    });
+  }
+
+  /// Get order book depth for a symbol
+  ///
+  /// [symbol] - Trading symbol
+  /// [depth] - Number of levels to retrieve
+  /// Returns order book data
+  Future<Map<String, dynamic>> getOrderBookDepth(String symbol, {int depth = 10}) async {
+    final convertedSymbol = await _symbolConversion.convertSymbol(symbol);
+    final l2Book = await _infoApi.getL2Book(convertedSymbol);
+    
+    if (l2Book == null) {
+      throw Exception('Could not fetch order book for $symbol');
+    }
+    
+    final bids = (l2Book.levels[0] as List).take(depth).toList();
+    final asks = (l2Book.levels[1] as List).take(depth).toList();
+    
+    return {
+      'symbol': symbol,
+      'bids': bids,
+      'asks': asks,
+      'timestamp': DateTime.now().millisecondsSinceEpoch,
+    };
+  }
 }

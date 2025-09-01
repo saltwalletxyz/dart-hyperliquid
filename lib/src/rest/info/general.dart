@@ -301,34 +301,121 @@ class GeneralInfoAPI {
     return rawResponse ? response : symbolConversion.convertResponse(response);
   }
 
-  Future<dynamic> twapHistory(String user, {bool rawResponse = false}) async {
+  // ==================== ADDITIONAL INFO ENDPOINTS ====================
+
+  /// Get leaderboard data
+  Future<dynamic> getLeaderboard({String? filter, int? n, bool rawResponse = false}) async {
     await parent.ensureInitialized();
-    final response = await httpApi.makeRequest<dynamic>({'type': InfoType.twapHistory, 'user': user});
+    final payload = {
+      'type': InfoType.leaderboard,
+      if (filter != null) 'filter': filter,
+      if (n != null) 'n': n,
+    };
+    final response = await httpApi.makeRequest<dynamic>(payload);
     return rawResponse ? response : symbolConversion.convertResponse(response);
   }
 
-  Future<dynamic> userToMultiSigSigners(String user, {bool rawResponse = false}) async {
+  /// Get Hyperliquid platform statistics
+  Future<dynamic> getHyperliquidStats({bool rawResponse = false}) async {
     await parent.ensureInitialized();
-    final response = await httpApi.makeRequest<dynamic>({'type': InfoType.userToMultiSigSigners, 'user': user});
+    final response = await httpApi.makeRequest<dynamic>({'type': InfoType.hyperliquidStats});
     return rawResponse ? response : symbolConversion.convertResponse(response);
   }
 
-  Future<dynamic> getBuilderFeeApproval(String user, String builderAddress, {bool rawResponse = false}) async {
+  /// Get best bid/offer for all assets
+  Future<dynamic> getBBO({bool rawResponse = false}) async {
     await parent.ensureInitialized();
-    final response =
-        await httpApi.makeRequest<dynamic>({'type': InfoType.builderFeeApproval, 'user': user, 'builderAddress': builderAddress});
+    final response = await httpApi.makeRequest<dynamic>({'type': InfoType.bbo});
     return rawResponse ? response : symbolConversion.convertResponse(response);
   }
 
-  Future<dynamic> getUserOrderHistory(String user, int startTime, [int? endTime, bool rawResponse = false]) async {
+  /// Get market statistics
+  Future<dynamic> getMarketStats({String? coin, bool rawResponse = false}) async {
+    await parent.ensureInitialized();
+    final payload = {
+      'type': InfoType.marketStats,
+      if (coin != null) 'coin': coin,
+    };
+    final response = await httpApi.makeRequest<dynamic>(payload);
+    return rawResponse ? response : symbolConversion.convertResponse(response);
+  }
+
+  /// Get recent liquidation data
+  Future<dynamic> getLiquidations({String? coin, int? startTime, int? endTime, bool rawResponse = false}) async {
+    await parent.ensureInitialized();
+    final payload = {
+      'type': InfoType.liquidations,
+      if (coin != null) 'coin': coin,
+      if (startTime != null) 'startTime': startTime,
+      if (endTime != null) 'endTime': endTime,
+    };
+    final response = await httpApi.makeRequest<dynamic>(payload);
+    return rawResponse ? response : symbolConversion.convertResponse(response);
+  }
+
+  /// Get funding history for a specific asset
+  Future<dynamic> getFundingHistory(String coin, {int? startTime, int? endTime, bool rawResponse = false}) async {
+    await parent.ensureInitialized();
+    final payload = {
+      'type': InfoType.fundingHistory,
+      'coin': coin,
+      if (startTime != null) 'startTime': startTime,
+      if (endTime != null) 'endTime': endTime,
+    };
+    final response = await httpApi.makeRequest<dynamic>(payload);
+    return rawResponse ? response : symbolConversion.convertResponse(response);
+  }
+
+  /// Get historical order data
+  Future<dynamic> getUserOrderHistory(String user, {int? startTime, int? endTime, bool rawResponse = false}) async {
     await parent.ensureInitialized();
     final payload = {
       'type': InfoType.userOrderHistory,
       'user': user,
-      'startTime': startTime,
-      if (endTime != null) 'endTime': endTime
+      if (startTime != null) 'startTime': startTime,
+      if (endTime != null) 'endTime': endTime,
     };
-    final response = await httpApi.makeRequest<dynamic>(payload, 20);
+    final response = await httpApi.makeRequest<dynamic>(payload);
+    return rawResponse ? response : symbolConversion.convertResponse(response);
+  }
+
+  /// Get TWAP history for a user
+  Future<dynamic> getTwapHistory(String user, {bool rawResponse = false}) async {
+    await parent.ensureInitialized();
+    final response = await httpApi.makeRequest<dynamic>({
+      'type': InfoType.twapHistory,
+      'user': user,
+    });
+    return rawResponse ? response : symbolConversion.convertResponse(response);
+  }
+
+  /// Get multi-sig signers for a user
+  Future<dynamic> getUserToMultiSigSigners(String user, {bool rawResponse = false}) async {
+    await parent.ensureInitialized();
+    final response = await httpApi.makeRequest<dynamic>({
+      'type': InfoType.userToMultiSigSigners,
+      'user': user,
+    });
+    return rawResponse ? response : symbolConversion.convertResponse(response);
+  }
+
+  /// Get builder fee approval status
+  Future<dynamic> getBuilderFeeApproval(String user, String builder, {bool rawResponse = false}) async {
+    await parent.ensureInitialized();
+    final response = await httpApi.makeRequest<dynamic>({
+      'type': InfoType.builderFeeApproval,
+      'user': user,
+      'builder': builder,
+    });
+    return rawResponse ? response : symbolConversion.convertResponse(response);
+  }
+
+  /// Check if assets are at open interest cap
+  Future<dynamic> getPerpsAtOpenInterestCap({bool rawResponse = false}) async {
+    await parent.ensureInitialized();
+    final response = await httpApi.makeRequest<dynamic>({
+      'type': InfoType.perpsAtOpenInterestCap,
+    });
     return rawResponse ? response : symbolConversion.convertResponse(response);
   }
 }
