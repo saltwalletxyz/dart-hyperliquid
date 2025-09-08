@@ -11,14 +11,18 @@
 /// - Production logging
 /// - Health checks
 /// - Graceful shutdown
+library;
 
-import 'dart:io';
 import 'dart:async';
+import 'dart:io';
 import 'dart:math';
+
 import 'package:hyperliquid/hyperliquid.dart';
 
 /// Production trading application
 class ProductionTradingApp {
+
+  ProductionTradingApp({required this.config});
   final ProductionConfig config;
   late final Hyperliquid client;
 
@@ -36,8 +40,6 @@ class ProductionTradingApp {
   Timer? healthCheckTimer;
   Timer? metricsTimer;
   Map<String, dynamic> lastHealthCheck = {};
-
-  ProductionTradingApp({required this.config});
 
   /// Initialize and start the application
   Future<void> start() async {
@@ -168,7 +170,7 @@ class ProductionTradingApp {
       'memory_usage_mb': ProcessInfo.currentRss / (1024 * 1024),
     };
 
-    print('📊 Metrics: ${metrics}');
+    print('📊 Metrics: $metrics');
 
     // In production, send to monitoring system (Prometheus, DataDog, etc.)
     await _sendMetricsToMonitoring(metrics);
@@ -213,7 +215,7 @@ class ProductionTradingApp {
       // Example 2: Get user information
       await _safeApiCall('Get User Info', () async {
         // Note: Replace with actual user address in production
-        final userAddress = '0x' + '0' * 40; // Placeholder
+        final userAddress = '0x${'0' * 40}'; // Placeholder
         try {
           final userOpenOrders = await client.info.getUserOpenOrders(userAddress);
           print('Open orders: ${userOpenOrders.length}');
@@ -401,18 +403,6 @@ class ProductionTradingApp {
 
 /// Production configuration
 class ProductionConfig {
-  final String environment;
-  final bool isTestnet;
-  final bool enableWebSocket;
-  final bool enableLogging;
-  final bool autoRecover;
-  final bool stopOnRecoveryFailure;
-
-  final int maxReconnectAttempts;
-  final int requestTimeoutMs;
-  final int rateLimitTokens;
-  final int healthCheckIntervalSeconds;
-  final int metricsIntervalMinutes;
 
   const ProductionConfig({
     required this.environment,
@@ -462,6 +452,18 @@ class ProductionConfig {
       stopOnRecoveryFailure: true,
     );
   }
+  final String environment;
+  final bool isTestnet;
+  final bool enableWebSocket;
+  final bool enableLogging;
+  final bool autoRecover;
+  final bool stopOnRecoveryFailure;
+
+  final int maxReconnectAttempts;
+  final int requestTimeoutMs;
+  final int rateLimitTokens;
+  final int healthCheckIntervalSeconds;
+  final int metricsIntervalMinutes;
 }
 
 /// Environment helper
@@ -516,7 +518,7 @@ Future<void> main() async {
 
     // Keep running until shutdown
     while (app.isRunning) {
-      await Future.delayed(Duration(seconds: 1));
+      await Future.delayed(const Duration(seconds: 1));
     }
   } catch (e, stackTrace) {
     print('💥 Application crashed: $e');
@@ -579,6 +581,12 @@ class PerformanceMonitor {
 
 /// Circuit breaker for API calls
 class CircuitBreaker {
+
+  CircuitBreaker({
+    this.failureThreshold = 5,
+    this.timeout = const Duration(seconds: 60),
+    this.retryAfter = const Duration(seconds: 30),
+  });
   final int failureThreshold;
   final Duration timeout;
   final Duration retryAfter;
@@ -586,12 +594,6 @@ class CircuitBreaker {
   int _failureCount = 0;
   DateTime? _lastFailureTime;
   bool _isOpen = false;
-
-  CircuitBreaker({
-    this.failureThreshold = 5,
-    this.timeout = const Duration(seconds: 60),
-    this.retryAfter = const Duration(seconds: 30),
-  });
 
   Future<T> execute<T>(Future<T> Function() operation) async {
     if (_isOpen) {

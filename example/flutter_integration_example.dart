@@ -15,13 +15,15 @@
 /// 2. Add flutter_local_notifications to pubspec.yaml
 /// 3. Configure notification permissions
 /// 4. Replace placeholder private key with secure storage implementation
+library;
 
-import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:hyperliquid/hyperliquid.dart';
 import 'dart:async';
 import 'dart:math';
+
+import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:hyperliquid/hyperliquid.dart';
 
 void main() {
   runApp(HyperliquidTradingApp());
@@ -332,9 +334,9 @@ class _SetupScreenState extends State<SetupScreen> {
 }
 
 class MainTradingScreen extends StatefulWidget {
-  final Hyperliquid client;
 
   MainTradingScreen({required this.client});
+  final Hyperliquid client;
 
   @override
   _MainTradingScreenState createState() => _MainTradingScreenState();
@@ -342,7 +344,7 @@ class MainTradingScreen extends StatefulWidget {
 
 class _MainTradingScreenState extends State<MainTradingScreen> {
   int _currentIndex = 0;
-  Map<String, double> _prices = {};
+  final Map<String, double> _prices = {};
   Map<String, dynamic> _portfolio = {};
 
   final List<String> _watchedSymbols = ['BTC-PERP', 'ETH-PERP', 'SOL-PERP', 'AVAX-PERP', 'MATIC-PERP'];
@@ -506,11 +508,6 @@ class _MainTradingScreenState extends State<MainTradingScreen> {
 
 // Dashboard Tab
 class DashboardTab extends StatelessWidget {
-  final Hyperliquid client;
-  final Map<String, dynamic> portfolio;
-  final Map<String, double> prices;
-  final List<String> watchedSymbols;
-  final VoidCallback onRefresh;
 
   DashboardTab({
     required this.client,
@@ -519,6 +516,11 @@ class DashboardTab extends StatelessWidget {
     required this.watchedSymbols,
     required this.onRefresh,
   });
+  final Hyperliquid client;
+  final Map<String, dynamic> portfolio;
+  final Map<String, double> prices;
+  final List<String> watchedSymbols;
+  final VoidCallback onRefresh;
 
   @override
   Widget build(BuildContext context) {
@@ -707,9 +709,9 @@ class DashboardTab extends StatelessWidget {
 
 // Trading Tab
 class TradingTab extends StatefulWidget {
-  final Hyperliquid client;
 
   TradingTab({required this.client});
+  final Hyperliquid client;
 
   @override
   _TradingTabState createState() => _TradingTabState();
@@ -897,10 +899,10 @@ class _TradingTabState extends State<TradingTab> {
 
 // Portfolio Tab
 class PortfolioTab extends StatelessWidget {
-  final Hyperliquid client;
-  final Map<String, dynamic> portfolio;
 
   PortfolioTab({required this.client, required this.portfolio});
+  final Hyperliquid client;
+  final Map<String, dynamic> portfolio;
 
   @override
   Widget build(BuildContext context) {
@@ -970,10 +972,10 @@ class PortfolioTab extends StatelessWidget {
 
 // Markets Tab
 class MarketsTab extends StatelessWidget {
-  final Map<String, double> prices;
-  final List<String> watchedSymbols;
 
   MarketsTab({required this.prices, required this.watchedSymbols});
+  final Map<String, double> prices;
+  final List<String> watchedSymbols;
 
   @override
   Widget build(BuildContext context) {
@@ -1016,7 +1018,7 @@ class MarketsTab extends StatelessWidget {
               ),
             ),
           );
-        }).toList(),
+        }),
       ],
     );
   }
@@ -1024,9 +1026,9 @@ class MarketsTab extends StatelessWidget {
 
 // Settings Tab
 class SettingsTab extends StatelessWidget {
-  final Hyperliquid client;
 
   SettingsTab({required this.client});
+  final Hyperliquid client;
 
   @override
   Widget build(BuildContext context) {

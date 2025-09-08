@@ -1,13 +1,16 @@
+import 'dart:convert';
 import 'dart:typed_data';
-import 'package:web3dart/web3dart.dart';
+
 import 'package:msgpack_dart/msgpack_dart.dart';
-import 'hash.dart';
+import 'package:web3dart/web3dart.dart';
+
+import 'hash.dart' as hashKeccak;
 
 class Wallet {
-  final EthPrivateKey credentials;
   Wallet(String privateKey) : credentials = EthPrivateKey.fromHex(privateKey);
+  final EthPrivateKey credentials;
 
-  EthereumAddress get address => credentials.address;
+  String get address => credentials.address.toString();
 
   Future<Uint8List> sign(Uint8List message) async {
     return credentials.signPersonalMessageToUint8List(message);
@@ -27,7 +30,7 @@ Uint8List actionHash(dynamic action, String? vaultAddress, int nonce) {
     view.setUint8(msgPackBytes.length + 8, 1);
     data.setAll(msgPackBytes.length + 9, hexToBytes(vaultAddress));
   }
-  return keccak256(data);
+  return hashKeccak.keccak256(data);
 }
 
 Future<dynamic> signL1Action(Wallet wallet, dynamic action, String? activePool, int nonce, bool isMainnet) async {
@@ -67,18 +70,114 @@ String bytesToHex(Uint8List bytes) {
 }
 
 Future<Map<String, dynamic>> _signTypedData(EthPrivateKey key, Map<String, dynamic> payload) async {
-  // web3dart does not expose EIP-712 directly. We sign the keccak256 hash of the encoded typed data.
-  // For our use-case, other SDKs sign the typed data using EIP-712 eth_signTypedData_v4.
-  // Here we approximate by signing personal message of the encoded hash so backend can recover signer.
-  // If strict EIP-712 is required, replace with a dedicated EIP-712 encoder for Dart.
-  final jsonStr = payload.toString();
-  final messageBytes = Uint8List.fromList(jsonStr.codeUnits);
-  final signature = key.signPersonalMessageToUint8List(messageBytes);
+  // Proper EIP-712 signing implementation
+  final domain = payload['domain'] as Map<String, dynamic>;
+  final types = payload['types'] as Map<String, dynamic>;
+  final primaryType = payload['primaryType'] as String;
+  final message = payload['message'] as Map<String, dynamic>;
+
+  // Compute domain separator
+  final domainSeparator = hashKeccak.keccak256(_encodeDomain(domain));
+
+  // Compute struct hash
+  final structHash = hashKeccak.keccak256(_encodeTypeData(primaryType, message, types));
+
+  // Compute EIP-712 typed data hash
+  final typedDataHash = hashKeccak.keccak256(Uint8List.fromList([0x19, 0x01, ...domainSeparator, ...structHash]));
+
+  // Sign the typed data hash as personal message
+  final signature = key.signPersonalMessageToUint8List(typedDataHash);
+
   return {
     'r': '0x${bytesToHex(signature.sublist(0, 32))}',
     's': '0x${bytesToHex(signature.sublist(32, 64))}',
     'v': signature[64],
   };
+}
+
+/// Encodes the EIP-712 domain according to ABI rules
+Uint8List _encodeDomain(Map<String, dynamic> domain) {
+  final parts = <Uint8List>[];
+  parts.add(
+      hashKeccak.keccak256(utf8.encode('EIP712Domain(string name,string version,uint256 chainId,address verifyingContract)')));
+  parts.add(hashKeccak.keccak256(utf8.encode(domain['name'] as String? ?? '')));
+  parts.add(hashKeccak.keccak256(utf8.encode(domain['version'] as String? ?? '')));
+  parts.add(Uint8List(32)..buffer.asByteData().setUint64(0, (domain['chainId'] as num? ?? 0).toInt(), Endian.big));
+  if (domain.containsKey('verifyingContract')) {
+    parts.add(hexToBytes((domain['verifyingContract'] as String).toLowerCase()));
+  }
+  return _abiEncodePacked(parts);
+}
+
+/// Encodes the typed data struct according to ABI rules
+Uint8List _encodeTypeData(String primaryType, Map<String, dynamic> message, Map<String, dynamic> types) {
+  final typeDef = types[primaryType] as List<dynamic>;
+  final encodedFields = <Uint8List>[];
+  final fieldOrder = <String>[];
+
+  // Get field order from type definition
+  for (final field in typeDef) {
+    final fieldMap = field as Map<String, dynamic>;
+    fieldOrder.add(fieldMap['name'] as String);
+  }
+
+  // Encode each field
+  for (final fieldName in fieldOrder) {
+    final fieldValue = message[fieldName];
+    final fieldType = _getFieldType(primaryType, fieldName, types);
+    encodedFields.add(_encodeField(fieldType, fieldValue));
+  }
+
+  return _abiEncodePacked(encodedFields);
+}
+
+/// Gets the type for a specific field
+String _getFieldType(String structType, String fieldName, Map<String, dynamic> types) {
+  final typeDef = types[structType] as List<dynamic>;
+  for (final field in typeDef) {
+    final fieldMap = field as Map<String, dynamic>;
+    if (fieldMap['name'] == fieldName) {
+      return fieldMap['type'] as String;
+    }
+  }
+  throw Exception('Field $fieldName not found in type $structType');
+}
+
+/// Encodes a single field value based on its type
+Uint8List _encodeField(String type, dynamic value) {
+  switch (type) {
+    case 'string':
+      return hashKeccak.keccak256(utf8.encode(value as String? ?? ''));
+    case 'bytes32':
+      return hexToBytes(value as String);
+    case 'address':
+      return hexToBytes((value as String).toLowerCase());
+    case 'uint256':
+    case 'uint64':
+      final numValue = BigInt.parse(value.toString());
+      final padded = Uint8List(32);
+      final bytes = numValue.toRadixString(16).padLeft(64, '0');
+      for (int i = 0; i < 32; i++) {
+        padded[i] = int.parse(bytes.substring(i * 2, i * 2 + 2), radix: 16);
+      }
+      return padded;
+    case 'bool':
+      return Uint8List(32)..[31] = (value as bool) ? 1 : 0;
+    default:
+      throw Exception('Unsupported type: $type');
+  }
+}
+
+/// ABI encodes packed (concatenates without length prefixes for fixed-size types)
+Uint8List _abiEncodePacked(List<Uint8List> parts) {
+  final totalLength = parts.fold<int>(0, (sum, part) => sum + part.length);
+  final result = Uint8List(totalLength);
+  var offset = 0;
+  for (final part in parts) {
+    result.setAll(offset, part);
+    offset += part.length;
+  }
+  return result;
 }
 
 String removeTrailingZeros(String value) {

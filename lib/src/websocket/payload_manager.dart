@@ -1,6 +1,6 @@
+import '../rest/custom_operations.dart';
 import 'payload_generator.dart';
 import 'subscriptions.dart';
-import '../rest/custom_operations.dart';
 
 /// WebSocket payload manager for executing exchange operations via WebSocket POST
 ///
@@ -8,10 +8,6 @@ import '../rest/custom_operations.dart';
 /// through WebSocket POST requests, offering better performance and real-time execution
 /// compared to REST API calls.
 class WebSocketPayloadManager {
-  final PayloadGenerator payloadGenerator;
-  final WebSocketSubscriptions subscriptions;
-  final CustomOperations? customOperations;
-  String? vaultAddress;
 
   WebSocketPayloadManager({
     required this.payloadGenerator,
@@ -19,6 +15,10 @@ class WebSocketPayloadManager {
     this.customOperations,
     this.vaultAddress,
   });
+  final PayloadGenerator payloadGenerator;
+  final WebSocketSubscriptions subscriptions;
+  final CustomOperations? customOperations;
+  String? vaultAddress;
 
   /// Execute any exchange method via WebSocket POST
   ///
@@ -102,6 +102,14 @@ class WebSocketPayloadManager {
 
   // ==================== TRANSFERS ====================
 
+  /// Transfer between spot and perp accounts via WebSocket POST
+  Future<dynamic> transferBetweenSpotAndPerp(double amount, bool toPerp) async {
+    return executeMethod('transferBetweenSpotAndPerp', {
+      'amount': amount.toString(),
+      'toPerp': toPerp,
+    });
+  }
+
   /// USD transfer via WebSocket POST
   Future<dynamic> usdTransfer(String destination, double amount) async {
     return executeMethod('usdTransfer', {
@@ -117,6 +125,45 @@ class WebSocketPayloadManager {
       'token': token,
       'amount': amount.toString(),
     });
+  }
+
+  /// Initiate withdrawal via WebSocket POST
+  Future<dynamic> initiateWithdrawal(String destination, double amount) async {
+    return executeMethod('initiateWithdrawal', {
+      'destination': destination,
+      'amount': amount.toString(),
+    });
+  }
+
+  /// Approve agent via WebSocket POST
+  Future<dynamic> approveAgent(String agentAddress, String agentName) async {
+    return executeMethod('approveAgent', {
+      'agentAddress': agentAddress,
+      'agentName': agentName,
+    });
+  }
+
+  /// Approve builder fee via WebSocket POST
+  Future<dynamic> approveBuilderFee(String builder, String maxFeeRate) async {
+    return executeMethod('approveBuilderFee', {
+      'builder': builder,
+      'maxFeeRate': maxFeeRate,
+    });
+  }
+
+  /// Schedule cancel via WebSocket POST
+  Future<dynamic> scheduleCancel(int? time) async {
+    return executeMethod('scheduleCancel', {'time': time});
+  }
+
+  /// Deposit into staking via WebSocket POST
+  Future<dynamic> cDeposit(BigInt wei) async {
+    return executeMethod('cDeposit', {'wei': wei.toString()});
+  }
+
+  /// Withdraw from staking via WebSocket POST
+  Future<dynamic> cWithdraw(BigInt wei) async {
+    return executeMethod('cWithdraw', {'wei': wei.toString()});
   }
 
   // ==================== VAULT OPERATIONS ====================
@@ -172,31 +219,7 @@ class WebSocketPayloadManager {
 
   // ==================== AGENT OPERATIONS ====================
 
-  /// Approve an agent via WebSocket POST
-  Future<dynamic> approveAgent(String agentAddress, String agentName) async {
-    return executeMethod('approveAgent', {
-      'agentAddress': agentAddress,
-      'agentName': agentName,
-    });
-  }
-
-  /// Approve builder fee via WebSocket POST
-  Future<dynamic> approveBuilderFee(String builder, String maxFeeRate) async {
-    return executeMethod('approveBuilderFee', {
-      'builder': builder,
-      'maxFeeRate': maxFeeRate,
-    });
-  }
-
   // ==================== WITHDRAWAL ====================
-
-  /// Initiate withdrawal via WebSocket POST
-  Future<dynamic> initiateWithdrawal(String destination, double amount) async {
-    return executeMethod('initiateWithdrawal', {
-      'destination': destination,
-      'amount': amount.toString(),
-    });
-  }
 
   // ==================== SUB-ACCOUNT OPERATIONS ====================
 
@@ -226,22 +249,7 @@ class WebSocketPayloadManager {
 
   // ==================== SCHEDULE OPERATIONS ====================
 
-  /// Schedule cancel via WebSocket POST
-  Future<dynamic> scheduleCancel(int? time) async {
-    return executeMethod('scheduleCancel', {'time': time});
-  }
-
   // ==================== STAKING OPERATIONS ====================
-
-  /// Deposit into staking via WebSocket POST
-  Future<dynamic> cDeposit(BigInt wei) async {
-    return executeMethod('cDeposit', {'wei': wei.toString()});
-  }
-
-  /// Withdraw from staking via WebSocket POST
-  Future<dynamic> cWithdraw(BigInt wei) async {
-    return executeMethod('cWithdraw', {'wei': wei.toString()});
-  }
 
   // ==================== CUSTOM MARKET OPERATIONS ====================
 

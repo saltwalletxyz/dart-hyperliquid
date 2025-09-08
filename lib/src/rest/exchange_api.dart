@@ -1,20 +1,11 @@
-import 'package:hyperliquid/src/utils/rate_limiter.dart';
-import 'package:hyperliquid/src/utils/http_api.dart';
-import 'package:hyperliquid/src/utils/symbol_conversion.dart';
 import 'package:hyperliquid/src/constants.dart';
 import 'package:hyperliquid/src/hyperliquid_base.dart';
+import 'package:hyperliquid/src/utils/http_api.dart';
+import 'package:hyperliquid/src/utils/rate_limiter.dart';
 import 'package:hyperliquid/src/utils/signing.dart';
+import 'package:hyperliquid/src/utils/symbol_conversion.dart';
 
 class ExchangeAPI {
-  final HttpApi _httpApi;
-  final SymbolConversion symbolConversion;
-  final Hyperliquid parent;
-  final bool isMainnet;
-  final Wallet wallet;
-  final String? walletAddress;
-  final String? vaultAddress;
-
-  int _lastNonceTs = 0;
 
   ExchangeAPI(
     bool testnet,
@@ -28,6 +19,15 @@ class ExchangeAPI {
   )   : isMainnet = !testnet,
         wallet = Wallet(privateKey),
         _httpApi = HttpApi(testnet ? BaseUrls.testnet : BaseUrls.production, Endpoints.exchange, rateLimiter);
+  final HttpApi _httpApi;
+  final SymbolConversion symbolConversion;
+  final Hyperliquid parent;
+  final bool isMainnet;
+  final Wallet wallet;
+  final String? walletAddress;
+  final String? vaultAddress;
+
+  int _lastNonceTs = 0;
 
   int _uniqueNonce() {
     final now = DateTime.now().millisecondsSinceEpoch;

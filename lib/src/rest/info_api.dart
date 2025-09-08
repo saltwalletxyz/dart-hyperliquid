@@ -1,19 +1,13 @@
-import 'package:hyperliquid/src/utils/rate_limiter.dart';
-import 'package:hyperliquid/src/utils/http_api.dart';
-import 'package:hyperliquid/src/utils/symbol_conversion.dart';
 import 'package:hyperliquid/src/constants.dart';
 import 'package:hyperliquid/src/hyperliquid_base.dart';
 import 'package:hyperliquid/src/rest/info/general.dart' as general;
-import 'package:hyperliquid/src/rest/info/spot.dart' as spot;
 import 'package:hyperliquid/src/rest/info/perpetuals.dart' as perps;
+import 'package:hyperliquid/src/rest/info/spot.dart' as spot;
+import 'package:hyperliquid/src/utils/http_api.dart';
+import 'package:hyperliquid/src/utils/rate_limiter.dart';
+import 'package:hyperliquid/src/utils/symbol_conversion.dart';
 
 class InfoAPI {
-  late final general.GeneralInfoAPI generalAPI;
-  late final spot.SpotInfoAPI spotAPI;
-  late final perps.PerpetualsInfoAPI perpetualsAPI;
-  final HttpApi _httpApi;
-  final SymbolConversion symbolConversion;
-  final Hyperliquid parent;
 
   InfoAPI(String baseUrl, RateLimiter rateLimiter, this.symbolConversion, this.parent)
       : _httpApi = HttpApi(baseUrl, Endpoints.info, rateLimiter) {
@@ -21,6 +15,12 @@ class InfoAPI {
     spotAPI = spot.SpotInfoAPI(_httpApi, symbolConversion);
     perpetualsAPI = perps.PerpetualsInfoAPI(_httpApi, symbolConversion, parent);
   }
+  late final general.GeneralInfoAPI generalAPI;
+  late final spot.SpotInfoAPI spotAPI;
+  late final perps.PerpetualsInfoAPI perpetualsAPI;
+  final HttpApi _httpApi;
+  final SymbolConversion symbolConversion;
+  final Hyperliquid parent;
 
   Future<int?> getAssetIndex(String assetName) async {
     await parent.ensureInitialized();

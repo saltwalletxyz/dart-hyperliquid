@@ -1,8 +1,10 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
-import 'package:web_socket_channel/web_socket_channel.dart';
+
 import 'package:logger/logger.dart';
+import 'package:web_socket_channel/web_socket_channel.dart';
+
 import '../constants.dart';
 
 /// WebSocket connection states
@@ -29,6 +31,10 @@ enum WebSocketEvent {
 
 /// Production-grade WebSocket client with advanced features
 class WebSocketClient {
+
+  WebSocketClient(this.testnet, this.maxReconnectAttempts) {
+    _logger.d('WebSocketClient initialized - testnet: $testnet, maxReconnectAttempts: $maxReconnectAttempts');
+  }
   final bool testnet;
   final int maxReconnectAttempts;
   final Logger _logger = Logger();
@@ -63,10 +69,6 @@ class WebSocketClient {
   final List<Map<String, dynamic>> _messageQueue = [];
   final int _maxQueueSize = 100;
   bool _queueEnabled = true;
-
-  WebSocketClient(this.testnet, this.maxReconnectAttempts) {
-    _logger.d('WebSocketClient initialized - testnet: $testnet, maxReconnectAttempts: $maxReconnectAttempts');
-  }
 
   /// Current connection state
   WebSocketState get state => _state;

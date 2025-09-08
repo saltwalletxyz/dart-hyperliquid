@@ -1,5 +1,5 @@
-import 'package:test/test.dart';
 import 'package:hyperliquid/hyperliquid.dart';
+import 'package:test/test.dart';
 
 void main() {
   group('Security Validation Tests', () {
@@ -30,7 +30,7 @@ void main() {
       });
 
       test('should reject non-hex private keys', () {
-        final result = SecurityValidator.validatePrivateKey('0x' + 'g' * 64);
+        final result = SecurityValidator.validatePrivateKey('0x${'g' * 64}');
         
         expect(result.isValid, isFalse);
         expect(result.message, contains('hexadecimal characters'));
@@ -39,9 +39,9 @@ void main() {
 
       test('should detect weak private keys', () {
         final weakKeys = [
-          '0x' + '0' * 64, // All zeros
-          '0x' + 'f' * 64, // All ones
-          '0x' + '1234567890abcdef' * 4, // Pattern
+          '0x${'0' * 64}', // All zeros
+          '0x${'f' * 64}', // All ones
+          '0x${'1234567890abcdef' * 4}', // Pattern
         ];
 
         for (final weakKey in weakKeys) {
@@ -55,7 +55,7 @@ void main() {
 
       test('should warn about low entropy keys', () {
         // Key with low entropy (only uses 0, 1, 2, 3)
-        final lowEntropyKey = '0x' + '0123' * 16;
+        final lowEntropyKey = '0x${'0123' * 16}';
         final result = SecurityValidator.validatePrivateKey(lowEntropyKey);
         
         expect(result.isValid, isTrue);

@@ -173,7 +173,7 @@ class Hyperliquid {
 
       // Derive wallet address
       final wallet = Wallet(privateKey);
-      walletAddress = wallet.address.hex;
+      walletAddress = wallet.address;
 
       isValidPrivateKey = true;
       _privateKey = privateKey;
@@ -296,5 +296,47 @@ class Hyperliquid {
 
   Future<void> refreshAssetMapsNow() async {
     await symbolConversion.initialize();
+  }
+
+  // ==================== RATE LIMITING UTILITIES ====================
+
+  /// Get rate limiting statistics
+  Map<String, dynamic> getRateLimitStats() {
+    return rateLimiter.getStatistics();
+  }
+
+  /// Get rate limiting health status
+  Map<String, dynamic> getRateLimitHealth() {
+    return rateLimiter.getHealthStatus();
+  }
+
+  /// Get rate limiting recommendations
+  List<String> getRateLimitRecommendations() {
+    return rateLimiter.getRecommendations();
+  }
+
+  /// Get detailed performance metrics
+  Map<String, dynamic> getRateLimitPerformanceMetrics() {
+    return rateLimiter.getPerformanceMetrics();
+  }
+
+  /// Check if rate limiter is ready for high-frequency operations
+  bool isReadyForHighFrequencyTrading() {
+    return rateLimiter.isReadyForHighFrequency();
+  }
+
+  /// Get estimated time until next token availability
+  Duration getTimeUntilNextRateLimitToken() {
+    return rateLimiter.getTimeUntilNextToken();
+  }
+
+  /// Get burst capacity information
+  Map<String, dynamic> getBurstCapacityInfo() {
+    return rateLimiter.getBurstCapacity();
+  }
+
+  /// Reset rate limiting statistics
+  void resetRateLimitStatistics() {
+    rateLimiter.resetStatistics();
   }
 }

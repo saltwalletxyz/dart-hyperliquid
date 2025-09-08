@@ -11,14 +11,29 @@
 ///
 /// ⚠️ WARNING: This is for educational purposes only.
 /// Always test thoroughly on testnet before using real funds.
+library;
 
-import 'dart:io';
 import 'dart:async';
+import 'dart:io';
 import 'dart:math';
+
 import 'package:hyperliquid/hyperliquid.dart';
 
 /// Main trading bot class
 class HyperliquidTradingBot {
+
+  HyperliquidTradingBot({
+    required this.client,
+    required this.config,
+  })  : riskManager = RiskManager(config.riskConfig),
+        portfolioManager = PortfolioManager() {
+    // Initialize strategies
+    strategies.addAll([
+      MomentumStrategy(config: config.momentumConfig),
+      MeanReversionStrategy(config: config.meanReversionConfig),
+      ArbitrageStrategy(config: config.arbitrageConfig),
+    ]);
+  }
   final Hyperliquid client;
   final BotConfig config;
   final RiskManager riskManager;
@@ -36,19 +51,6 @@ class HyperliquidTradingBot {
   int totalTrades = 0;
   int profitableTrades = 0;
   double totalPnl = 0;
-
-  HyperliquidTradingBot({
-    required this.client,
-    required this.config,
-  })  : riskManager = RiskManager(config.riskConfig),
-        portfolioManager = PortfolioManager() {
-    // Initialize strategies
-    strategies.addAll([
-      MomentumStrategy(config: config.momentumConfig),
-      MeanReversionStrategy(config: config.meanReversionConfig),
-      ArbitrageStrategy(config: config.arbitrageConfig),
-    ]);
-  }
 
   /// Start the trading bot
   Future<void> start() async {
@@ -137,7 +139,7 @@ class HyperliquidTradingBot {
 
     // Wait for stop signal
     while (isRunning) {
-      await Future.delayed(Duration(seconds: 1));
+      await Future.delayed(const Duration(seconds: 1));
     }
 
     // Cancel timers
@@ -288,7 +290,7 @@ class HyperliquidTradingBot {
         return;
       }
 
-      print('📊 Executing signal: ${signal.symbol} ${signal.action} ${positionSize}');
+      print('📊 Executing signal: ${signal.symbol} ${signal.action} $positionSize');
 
       // Execute the trade
       switch (signal.action) {
@@ -511,23 +513,6 @@ class HyperliquidTradingBot {
 
 /// Bot configuration
 class BotConfig {
-  final List<String> watchedSymbols;
-  final int marketDataIntervalSeconds;
-  final int tradingIntervalSeconds;
-  final int riskCheckIntervalSeconds;
-  final int reportIntervalMinutes;
-  final int maxPriceHistoryLength;
-  final double maxSlippage;
-  final double maxDrawdown;
-  final double maxMarginUsage;
-  final bool closePositionsOnStop;
-  final bool stopOnMaxDrawdown;
-  final bool stopOnLiquidation;
-
-  final RiskConfig riskConfig;
-  final StrategyConfig momentumConfig;
-  final StrategyConfig meanReversionConfig;
-  final StrategyConfig arbitrageConfig;
 
   BotConfig({
     required this.watchedSymbols,
@@ -547,14 +532,27 @@ class BotConfig {
     required this.meanReversionConfig,
     required this.arbitrageConfig,
   });
+  final List<String> watchedSymbols;
+  final int marketDataIntervalSeconds;
+  final int tradingIntervalSeconds;
+  final int riskCheckIntervalSeconds;
+  final int reportIntervalMinutes;
+  final int maxPriceHistoryLength;
+  final double maxSlippage;
+  final double maxDrawdown;
+  final double maxMarginUsage;
+  final bool closePositionsOnStop;
+  final bool stopOnMaxDrawdown;
+  final bool stopOnLiquidation;
+
+  final RiskConfig riskConfig;
+  final StrategyConfig momentumConfig;
+  final StrategyConfig meanReversionConfig;
+  final StrategyConfig arbitrageConfig;
 }
 
 /// Risk management configuration
 class RiskConfig {
-  final double maxPositionSize;
-  final double maxPortfolioRisk;
-  final double maxCorrelationRisk;
-  final int maxOpenPositions;
 
   RiskConfig({
     this.maxPositionSize = 0.1,
@@ -562,26 +560,30 @@ class RiskConfig {
     this.maxCorrelationRisk = 0.3,
     this.maxOpenPositions = 5,
   });
+  final double maxPositionSize;
+  final double maxPortfolioRisk;
+  final double maxCorrelationRisk;
+  final int maxOpenPositions;
 }
 
 /// Strategy configuration
 class StrategyConfig {
-  final bool enabled;
-  final double allocation;
-  final Map<String, dynamic> parameters;
 
   StrategyConfig({
     this.enabled = true,
     this.allocation = 0.33,
     this.parameters = const {},
   });
+  final bool enabled;
+  final double allocation;
+  final Map<String, dynamic> parameters;
 }
 
 /// Risk manager
 class RiskManager {
-  final RiskConfig config;
 
   RiskManager(this.config);
+  final RiskConfig config;
 
   bool canTrade(PortfolioManager portfolio) {
     return portfolio.availableBalance > 100 && // Minimum balance
@@ -648,10 +650,6 @@ class PortfolioManager {
 
 /// Position data
 class Position {
-  final String symbol;
-  final double size;
-  final double entryPrice;
-  final double unrealizedPnl;
 
   Position({
     required this.symbol,
@@ -659,16 +657,14 @@ class Position {
     required this.entryPrice,
     required this.unrealizedPnl,
   });
+  final String symbol;
+  final double size;
+  final double entryPrice;
+  final double unrealizedPnl;
 }
 
 /// Trading signal
 class TradingSignal {
-  final String symbol;
-  final SignalAction action;
-  final OrderType orderType;
-  final double? price;
-  final double confidence;
-  final String strategy;
 
   TradingSignal({
     required this.symbol,
@@ -678,6 +674,12 @@ class TradingSignal {
     required this.confidence,
     required this.strategy,
   });
+  final String symbol;
+  final SignalAction action;
+  final OrderType orderType;
+  final double? price;
+  final double confidence;
+  final String strategy;
 }
 
 enum SignalAction { buy, sell, close }
@@ -686,16 +688,16 @@ enum OrderType { market, limit }
 
 /// Base trading strategy
 abstract class TradingStrategy {
-  final String name;
-  final StrategyConfig config;
-  bool isEnabled;
-  int signalsGenerated = 0;
-  Map<String, Map<String, double>> indicators = {};
 
   TradingStrategy({
     required this.name,
     required this.config,
   }) : isEnabled = config.enabled;
+  final String name;
+  final StrategyConfig config;
+  bool isEnabled;
+  int signalsGenerated = 0;
+  Map<String, Map<String, double>> indicators = {};
 
   void updateIndicators(String symbol, Map<String, double> newIndicators) {
     indicators[symbol] = newIndicators;
@@ -709,7 +711,7 @@ abstract class TradingStrategy {
 
 /// Momentum trading strategy
 class MomentumStrategy extends TradingStrategy {
-  MomentumStrategy({required StrategyConfig config}) : super(name: 'Momentum', config: config);
+  MomentumStrategy({required super.config}) : super(name: 'Momentum');
 
   @override
   Future<List<TradingSignal>> generateSignals(
@@ -758,7 +760,7 @@ class MomentumStrategy extends TradingStrategy {
 
 /// Mean reversion strategy
 class MeanReversionStrategy extends TradingStrategy {
-  MeanReversionStrategy({required StrategyConfig config}) : super(name: 'Mean Reversion', config: config);
+  MeanReversionStrategy({required super.config}) : super(name: 'Mean Reversion');
 
   @override
   Future<List<TradingSignal>> generateSignals(
@@ -808,7 +810,7 @@ class MeanReversionStrategy extends TradingStrategy {
 
 /// Arbitrage strategy (placeholder)
 class ArbitrageStrategy extends TradingStrategy {
-  ArbitrageStrategy({required StrategyConfig config}) : super(name: 'Arbitrage', config: config);
+  ArbitrageStrategy({required super.config}) : super(name: 'Arbitrage');
 
   @override
   Future<List<TradingSignal>> generateSignals(

@@ -1,5 +1,5 @@
-import 'package:test/test.dart';
 import 'package:hyperliquid/src/utils/signing.dart';
+import 'package:test/test.dart';
 
 void main() {
   test('floatToWire enforces precision and strips zeros', () {

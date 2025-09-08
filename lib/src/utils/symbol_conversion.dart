@@ -4,6 +4,13 @@ import 'package:hyperliquid/src/utils/http_api.dart';
 import 'package:hyperliquid/src/utils/rate_limiter.dart';
 
 class SymbolConversion {
+
+  SymbolConversion(
+    String baseUrl,
+    RateLimiter rateLimiter, [
+    this._disableAssetMapRefresh = false,
+    this._refreshIntervalMs = 60000,
+  ]) : _httpApi = HttpApi(baseUrl, Endpoints.info, rateLimiter);
   final HttpApi _httpApi;
   final bool _disableAssetMapRefresh;
   int _refreshIntervalMs;
@@ -15,13 +22,6 @@ class SymbolConversion {
 
   final Map<String, int> _assetToIndexMap = {};
   final Map<String, String> _exchangeToInternalNameMap = {};
-
-  SymbolConversion(
-    String baseUrl,
-    RateLimiter rateLimiter, [
-    this._disableAssetMapRefresh = false,
-    this._refreshIntervalMs = 60000,
-  ]) : _httpApi = HttpApi(baseUrl, Endpoints.info, rateLimiter);
 
   Future<void> initialize() async {
     if (_initialized) return;

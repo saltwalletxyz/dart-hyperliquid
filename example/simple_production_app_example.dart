@@ -2,9 +2,11 @@
 ///
 /// This example demonstrates basic usage patterns for production applications.
 /// It focuses on real API methods that are confirmed to work.
+library;
 
-import 'dart:io';
 import 'dart:async';
+import 'dart:io';
+
 import 'package:hyperliquid/hyperliquid.dart';
 
 /// Simple production application
@@ -42,7 +44,7 @@ class SimpleProductionApp {
       print('⚠️ HYPERLIQUID_PRIVATE_KEY not set - running in read-only mode');
 
       // Initialize without private key for read-only access
-      client = Hyperliquid(HyperliquidConfig(
+      client = Hyperliquid(const HyperliquidConfig(
         testnet: true, // Use testnet by default
       ));
     } else {
@@ -94,7 +96,7 @@ class SimpleProductionApp {
       for (final coin in popularCoins) {
         final price = allMids.mids[coin];
         if (price != null) {
-          print('  $coin: \$${price}');
+          print('  $coin: \$$price');
         }
       }
 

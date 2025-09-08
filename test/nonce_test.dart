@@ -1,8 +1,8 @@
-import 'package:test/test.dart';
+import 'package:hyperliquid/src/hyperliquid_base.dart';
 import 'package:hyperliquid/src/rest/exchange_api.dart';
 import 'package:hyperliquid/src/utils/rate_limiter.dart';
 import 'package:hyperliquid/src/utils/symbol_conversion.dart';
-import 'package:hyperliquid/src/hyperliquid_base.dart';
+import 'package:test/test.dart';
 
 // Minimal stub to access private nonce via placeOrder payload builder
 

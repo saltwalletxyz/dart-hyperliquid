@@ -10,6 +10,7 @@
         "collection",
         "convert",
         "crypto",
+        "eip712",
         "fixnum",
         "freezed_annotation",
         "http",
@@ -31,13 +32,12 @@
     },
     {
       "name": "json_serializable",
-      "version": "6.9.5",
+      "version": "6.11.1",
       "dependencies": [
         "analyzer",
         "async",
         "build",
         "build_config",
-        "collection",
         "dart_style",
         "json_annotation",
         "meta",
@@ -50,7 +50,7 @@
     },
     {
       "name": "freezed",
-      "version": "2.5.8",
+      "version": "3.2.0",
       "dependencies": [
         "analyzer",
         "build",
@@ -60,23 +60,21 @@
         "freezed_annotation",
         "json_annotation",
         "meta",
+        "pub_semver",
         "source_gen"
       ]
     },
     {
       "name": "build_runner",
-      "version": "2.4.14",
+      "version": "2.6.1",
       "dependencies": [
-        "analyzer",
         "args",
         "async",
         "build",
         "build_config",
         "build_daemon",
-        "build_resolvers",
         "build_runner_core",
         "code_builder",
-        "collection",
         "crypto",
         "dart_style",
         "frontend_server_client",
@@ -84,13 +82,9 @@
         "graphs",
         "http_multi_server",
         "io",
-        "js",
         "logging",
-        "meta",
         "mime",
-        "package_config",
         "path",
-        "pool",
         "pub_semver",
         "pubspec_parse",
         "shelf",
@@ -99,8 +93,7 @@
         "stream_transform",
         "timing",
         "watcher",
-        "web_socket_channel",
-        "yaml"
+        "web_socket_channel"
       ]
     },
     {
@@ -149,7 +142,7 @@
     },
     {
       "name": "freezed_annotation",
-      "version": "2.4.4",
+      "version": "3.1.0",
       "dependencies": [
         "collection",
         "json_annotation",
@@ -169,10 +162,19 @@
       "dependencies": []
     },
     {
-      "name": "web3dart",
-      "version": "2.7.3",
+      "name": "eip712",
+      "version": "1.0.0",
       "dependencies": [
-        "async",
+        "freezed_annotation",
+        "json_annotation",
+        "wallet",
+        "web3dart"
+      ]
+    },
+    {
+      "name": "web3dart",
+      "version": "3.0.1",
+      "dependencies": [
         "convert",
         "eip1559",
         "eip55",
@@ -189,11 +191,10 @@
     },
     {
       "name": "pointycastle",
-      "version": "3.9.1",
+      "version": "4.0.0",
       "dependencies": [
         "collection",
-        "convert",
-        "js"
+        "convert"
       ]
     },
     {
@@ -259,7 +260,7 @@
     },
     {
       "name": "source_gen",
-      "version": "2.0.0",
+      "version": "3.1.0",
       "dependencies": [
         "analyzer",
         "async",
@@ -327,13 +328,17 @@
     },
     {
       "name": "build",
-      "version": "2.4.2",
+      "version": "3.0.1",
       "dependencies": [
         "analyzer",
         "async",
+        "build_runner_core",
+        "built_collection",
+        "built_value",
         "convert",
         "crypto",
         "glob",
+        "graphs",
         "logging",
         "meta",
         "package_config",
@@ -364,15 +369,6 @@
         "source_span",
         "watcher",
         "yaml"
-      ]
-    },
-    {
-      "name": "yaml",
-      "version": "3.1.3",
-      "dependencies": [
-        "collection",
-        "source_span",
-        "string_scanner"
       ]
     },
     {
@@ -424,21 +420,6 @@
       ]
     },
     {
-      "name": "pool",
-      "version": "1.5.1",
-      "dependencies": [
-        "async",
-        "stack_trace"
-      ]
-    },
-    {
-      "name": "package_config",
-      "version": "2.2.0",
-      "dependencies": [
-        "path"
-      ]
-    },
-    {
       "name": "mime",
       "version": "2.0.0",
       "dependencies": []
@@ -446,11 +427,6 @@
     {
       "name": "logging",
       "version": "1.3.0",
-      "dependencies": []
-    },
-    {
-      "name": "js",
-      "version": "0.7.2",
       "dependencies": []
     },
     {
@@ -508,12 +484,16 @@
     },
     {
       "name": "build_runner_core",
-      "version": "8.0.0",
+      "version": "9.2.1",
       "dependencies": [
+        "analyzer",
         "async",
         "build",
         "build_config",
         "build_resolvers",
+        "build_runner",
+        "built_collection",
+        "built_value",
         "collection",
         "convert",
         "crypto",
@@ -527,26 +507,6 @@
         "pool",
         "timing",
         "watcher",
-        "yaml"
-      ]
-    },
-    {
-      "name": "build_resolvers",
-      "version": "2.4.4",
-      "dependencies": [
-        "analyzer",
-        "async",
-        "build",
-        "collection",
-        "convert",
-        "crypto",
-        "graphs",
-        "logging",
-        "package_config",
-        "path",
-        "pool",
-        "pub_semver",
-        "stream_transform",
         "yaml"
       ]
     },
@@ -572,6 +532,15 @@
       "name": "args",
       "version": "2.7.0",
       "dependencies": []
+    },
+    {
+      "name": "yaml",
+      "version": "3.1.3",
+      "dependencies": [
+        "collection",
+        "source_span",
+        "string_scanner"
+      ]
     },
     {
       "name": "webkit_inspection_protocol",
@@ -666,6 +635,21 @@
       ]
     },
     {
+      "name": "pool",
+      "version": "1.5.1",
+      "dependencies": [
+        "async",
+        "stack_trace"
+      ]
+    },
+    {
+      "name": "package_config",
+      "version": "2.2.0",
+      "dependencies": [
+        "path"
+      ]
+    },
+    {
       "name": "node_preamble",
       "version": "2.0.2",
       "dependencies": []
@@ -680,6 +664,11 @@
         "term_glyph",
         "test_api"
       ]
+    },
+    {
+      "name": "js",
+      "version": "0.7.2",
+      "dependencies": []
     },
     {
       "name": "coverage",
@@ -708,7 +697,7 @@
     },
     {
       "name": "wallet",
-      "version": "0.0.13",
+      "version": "0.0.18",
       "dependencies": [
         "convert",
         "eip55",
@@ -725,14 +714,14 @@
     },
     {
       "name": "eip55",
-      "version": "1.0.2",
+      "version": "1.0.3",
       "dependencies": [
         "pointycastle"
       ]
     },
     {
       "name": "json_rpc_2",
-      "version": "3.0.3",
+      "version": "4.0.0",
       "dependencies": [
         "stack_trace",
         "stream_channel"
@@ -750,7 +739,7 @@
     },
     {
       "name": "sec",
-      "version": "1.1.0",
+      "version": "1.1.1",
       "dependencies": [
         "pointycastle"
       ]
@@ -785,6 +774,21 @@
       ]
     },
     {
+      "name": "built_value",
+      "version": "8.11.1",
+      "dependencies": [
+        "built_collection",
+        "collection",
+        "fixnum",
+        "meta"
+      ]
+    },
+    {
+      "name": "built_collection",
+      "version": "5.1.1",
+      "dependencies": []
+    },
+    {
       "name": "_fe_analyzer_shared",
       "version": "85.0.0",
       "dependencies": [
@@ -807,19 +811,21 @@
       ]
     },
     {
-      "name": "built_value",
-      "version": "8.11.1",
+      "name": "build_resolvers",
+      "version": "3.0.1",
       "dependencies": [
-        "built_collection",
+        "analyzer",
+        "async",
+        "build",
+        "build_runner_core",
         "collection",
-        "fixnum",
-        "meta"
+        "convert",
+        "crypto",
+        "package_config",
+        "path",
+        "pool",
+        "pub_semver"
       ]
-    },
-    {
-      "name": "built_collection",
-      "version": "5.1.1",
-      "dependencies": []
     },
     {
       "name": "vm_service",

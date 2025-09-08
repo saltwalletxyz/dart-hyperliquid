@@ -5,6 +5,17 @@ import 'security_validator.dart';
 
 /// Production-grade security manager for the Hyperliquid SDK
 class SecurityManager {
+  
+  /// Initialize security manager with configuration
+  SecurityManager({
+    bool strictValidation = true,
+    bool logSecurityEvents = true,
+    bool enableRateLimiting = true,
+  }) : _strictValidation = strictValidation,
+       _logSecurityEvents = logSecurityEvents,
+       _enableRateLimiting = enableRateLimiting {
+    _logger.i('SecurityManager initialized - strict: $_strictValidation, logging: $_logSecurityEvents, rate limiting: $_enableRateLimiting');
+  }
   final Logger _logger = Logger();
   
   // Rate limiting
@@ -20,17 +31,6 @@ class SecurityManager {
   bool _strictValidation = true;
   bool _logSecurityEvents = true;
   bool _enableRateLimiting = true;
-  
-  /// Initialize security manager with configuration
-  SecurityManager({
-    bool strictValidation = true,
-    bool logSecurityEvents = true,
-    bool enableRateLimiting = true,
-  }) : _strictValidation = strictValidation,
-       _logSecurityEvents = logSecurityEvents,
-       _enableRateLimiting = enableRateLimiting {
-    _logger.i('SecurityManager initialized - strict: $_strictValidation, logging: $_logSecurityEvents, rate limiting: $_enableRateLimiting');
-  }
   
   /// Validate private key with comprehensive security checks
   Future<ValidationResult> validatePrivateKey(String privateKey) async {
@@ -272,15 +272,15 @@ class SecurityManager {
 
 /// Security event for monitoring and auditing
 class SecurityEvent {
-  final SecurityEventType type;
-  final String message;
-  final DateTime timestamp;
   
   SecurityEvent({
     required this.type,
     required this.message,
     required this.timestamp,
   });
+  final SecurityEventType type;
+  final String message;
+  final DateTime timestamp;
   
   @override
   String toString() => '${timestamp.toIso8601String()} [$type] $message';
@@ -303,9 +303,9 @@ enum SecurityEventType {
 
 /// Security exception for critical security violations
 class SecurityException implements Exception {
-  final String message;
   
   SecurityException(this.message);
+  final String message;
   
   @override
   String toString() => 'SecurityException: $message';

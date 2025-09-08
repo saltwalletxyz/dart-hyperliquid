@@ -1,6 +1,5 @@
-import 'dart:io';
-import 'package:test/test.dart';
 import 'package:hyperliquid/hyperliquid.dart';
+import 'package:test/test.dart';
 
 void main() {
   group('Error Handling Tests', () {
@@ -368,8 +367,8 @@ void main() {
 
 // Test exception for recovery strategy testing
 class TestException implements Exception {
-  final String message;
   TestException(this.message);
+  final String message;
   
   @override
   String toString() => 'TestException: $message';

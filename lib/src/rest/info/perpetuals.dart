@@ -1,14 +1,14 @@
-import 'package:hyperliquid/src/utils/http_api.dart';
-import 'package:hyperliquid/src/utils/symbol_conversion.dart';
 import 'package:hyperliquid/src/constants.dart';
 import 'package:hyperliquid/src/hyperliquid_base.dart';
+import 'package:hyperliquid/src/utils/http_api.dart';
+import 'package:hyperliquid/src/utils/symbol_conversion.dart';
 
 class PerpetualsInfoAPI {
+
+  PerpetualsInfoAPI(this.httpApi, this.symbolConversion, this.parent);
   final HttpApi httpApi;
   final SymbolConversion symbolConversion;
   final Hyperliquid parent;
-
-  PerpetualsInfoAPI(this.httpApi, this.symbolConversion, this.parent);
 
   Future<dynamic> getMeta({bool rawResponse = false}) async {
     final response = await httpApi.makeRequest<dynamic>({'type': InfoType.meta});

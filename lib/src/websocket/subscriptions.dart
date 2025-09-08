@@ -1,9 +1,20 @@
 import 'dart:async';
-import 'package:hyperliquid/src/websocket/websocket_client.dart';
+
 import 'package:hyperliquid/src/utils/symbol_conversion.dart';
+import 'package:hyperliquid/src/websocket/websocket_client.dart';
 import 'package:logger/logger.dart';
 
 class WebSocketSubscriptions {
+  WebSocketSubscriptions(this.ws, this.symbolConversion) {
+    // Listen for WebSocket messages
+    ws.on(WebSocketEvent.message, _handleMessage);
+
+    // Listen for reconnection events to resubscribe
+    ws.on(WebSocketEvent.reconnect, _resubscribeAll);
+
+    // Clean up on disconnect
+    ws.on(WebSocketEvent.close, _handleDisconnect);
+  }
   final WebSocketClient ws;
   final SymbolConversion symbolConversion;
   final Logger _logger = Logger();
@@ -15,17 +26,6 @@ class WebSocketSubscriptions {
   // Subscription management
   final Map<String, Set<Function>> _activeSubscriptions = {};
   final Map<String, Map<String, dynamic>> _subscriptionDetails = {};
-
-  WebSocketSubscriptions(this.ws, this.symbolConversion) {
-    // Listen for WebSocket messages
-    ws.on(WebSocketEvent.message, _handleMessage);
-
-    // Listen for reconnection events to resubscribe
-    ws.on(WebSocketEvent.reconnect, _resubscribeAll);
-
-    // Clean up on disconnect
-    ws.on(WebSocketEvent.close, _handleDisconnect);
-  }
 
   void _handleMessage(dynamic message) {
     if (message is Map<String, dynamic>) {
@@ -268,8 +268,9 @@ class WebSocketSubscriptions {
 
   /// Subscribe to candle updates
   Future<void> subscribeToCandle(String coin, String interval, Function callback) async {
-    final convertedCoin = await symbolConversion.convertSymbol(coin, 'reverse');
-    await subscribe('candle', callback, {'coin': convertedCoin, 'interval': interval});
+    // For WebSocket subscriptions, use the coin symbol directly without conversion
+    // The API expects the raw symbol name (e.g., "BTC") not the converted internal name
+    await subscribe('candle', callback, {'coin': coin, 'interval': interval});
   }
 
   /// Unsubscribe from candle updates
@@ -279,8 +280,8 @@ class WebSocketSubscriptions {
 
   /// Subscribe to L2 order book updates
   Future<void> subscribeToL2Book(String coin, Function callback) async {
-    final convertedCoin = await symbolConversion.convertSymbol(coin, 'reverse');
-    await subscribe('l2Book', callback, {'coin': convertedCoin});
+    // For WebSocket subscriptions, use the coin symbol directly without conversion
+    await subscribe('l2Book', callback, {'coin': coin});
   }
 
   /// Unsubscribe from L2 order book updates
@@ -290,8 +291,8 @@ class WebSocketSubscriptions {
 
   /// Subscribe to trades
   Future<void> subscribeToTrades(String coin, Function callback) async {
-    final convertedCoin = await symbolConversion.convertSymbol(coin, 'reverse');
-    await subscribe('trades', callback, {'coin': convertedCoin});
+    // For WebSocket subscriptions, use the coin symbol directly without conversion
+    await subscribe('trades', callback, {'coin': coin});
   }
 
   /// Unsubscribe from trades
@@ -351,8 +352,8 @@ class WebSocketSubscriptions {
 
   /// Subscribe to user active asset data
   Future<void> subscribeToUserActiveAssetData(String user, String coin, Function callback) async {
-    final convertedCoin = await symbolConversion.convertSymbol(coin, 'reverse');
-    await subscribe('activeAssetData', callback, {'user': user, 'coin': convertedCoin});
+    // For WebSocket subscriptions, use the coin symbol directly without conversion
+    await subscribe('activeAssetData', callback, {'user': user, 'coin': coin});
   }
 
   /// Unsubscribe from user active asset data
@@ -362,8 +363,8 @@ class WebSocketSubscriptions {
 
   /// Subscribe to active asset context
   Future<void> subscribeToActiveAssetCtx(String coin, Function callback) async {
-    final convertedCoin = await symbolConversion.convertSymbol(coin, 'reverse');
-    await subscribe('activeAssetCtx', callback, {'coin': convertedCoin});
+    // For WebSocket subscriptions, use the coin symbol directly without conversion
+    await subscribe('activeAssetCtx', callback, {'coin': coin});
   }
 
   /// Unsubscribe from active asset context
@@ -391,13 +392,47 @@ class WebSocketSubscriptions {
     await unsubscribe('twapSliceFills');
   }
 
+  /// Subscribe to active spot asset context
+  /// Provides real-time context for spot trading assets
+  Future<void> subscribeToActiveSpotAssetCtx(String coin, Function callback) async {
+    // For WebSocket subscriptions, use the coin symbol directly without conversion
+    await subscribe('activeSpotAssetCtx', callback, {'coin': coin});
+  }
+
+  /// Unsubscribe from active spot asset context
+  Future<void> unsubscribeFromActiveSpotAssetCtx(String coin) async {
+    await unsubscribe('activeSpotAssetCtx');
+  }
+
+  /// Subscribe to user TWAP slice fills
+  /// Provides real-time TWAP execution updates for user
+  Future<void> subscribeToUserTwapSliceFills(String user, Function callback) async {
+    await subscribe('userTwapSliceFills', callback, {'user': user});
+  }
+
+  /// Unsubscribe from user TWAP slice fills
+  Future<void> unsubscribeFromUserTwapSliceFills(String user) async {
+    await unsubscribe('userTwapSliceFills');
+  }
+
+  /// Subscribe to user TWAP history
+  /// Provides TWAP order history updates for user
+  Future<void> subscribeToUserTwapHistory(String user, Function callback) async {
+    await subscribe('userTwapHistory', callback, {'user': user});
+  }
+
+  /// Unsubscribe from user TWAP history
+  Future<void> unsubscribeFromUserTwapHistory(String user) async {
+    await unsubscribe('userTwapHistory');
+  }
+
   // ==================== ADDITIONAL SUBSCRIPTION TYPES ====================
-  
+
   /// Subscribe to BBO (Best Bid/Offer) stream
   /// This provides the best bid and offer prices for a specific coin
   Future<void> subscribeToBBO(String coin, Function callback) async {
-    final convertedCoin = await symbolConversion.convertSymbol(coin, 'reverse');
-    await subscribe('bbo', callback, {'coin': convertedCoin});
+    // For WebSocket subscriptions, use the coin symbol directly without conversion
+    await subscribe('bbo', callback, {'coin': coin});
   }
 
   /// Unsubscribe from BBO stream
@@ -422,7 +457,7 @@ class WebSocketSubscriptions {
     await subscribe('userBalances', callback, {'user': user});
   }
 
-  /// Unsubscribe from user balance updates  
+  /// Unsubscribe from user balance updates
   Future<void> unsubscribeFromUserBalances(String user) async {
     await unsubscribe('userBalances');
   }
@@ -430,8 +465,8 @@ class WebSocketSubscriptions {
   /// Subscribe to market mid-price for a specific coin
   /// Alternative to allMids for single coin tracking
   Future<void> subscribeToMid(String coin, Function callback) async {
-    final convertedCoin = await symbolConversion.convertSymbol(coin, 'reverse');
-    await subscribe('mid', callback, {'coin': convertedCoin});
+    // For WebSocket subscriptions, use the coin symbol directly without conversion
+    await subscribe('mid', callback, {'coin': coin});
   }
 
   /// Unsubscribe from specific coin mid-price
@@ -453,8 +488,8 @@ class WebSocketSubscriptions {
   /// Subscribe to oracle prices
   /// Provides oracle price data for mark price calculations
   Future<void> subscribeToOraclePrices(String coin, Function callback) async {
-    final convertedCoin = await symbolConversion.convertSymbol(coin, 'reverse');
-    await subscribe('oraclePrices', callback, {'coin': convertedCoin});
+    // For WebSocket subscriptions, use the coin symbol directly without conversion
+    await subscribe('oraclePrices', callback, {'coin': coin});
   }
 
   /// Unsubscribe from oracle prices
@@ -465,8 +500,8 @@ class WebSocketSubscriptions {
   /// Subscribe to funding rates
   /// Provides real-time funding rate updates
   Future<void> subscribeToFundingRates(String coin, Function callback) async {
-    final convertedCoin = await symbolConversion.convertSymbol(coin, 'reverse');
-    await subscribe('fundingRates', callback, {'coin': convertedCoin});
+    // For WebSocket subscriptions, use the coin symbol directly without conversion
+    await subscribe('fundingRates', callback, {'coin': coin});
   }
 
   /// Unsubscribe from funding rates
@@ -477,8 +512,8 @@ class WebSocketSubscriptions {
   /// Subscribe to liquidation events
   /// Provides real-time liquidation data for market analysis
   Future<void> subscribeToLiquidations(String coin, Function callback) async {
-    final convertedCoin = await symbolConversion.convertSymbol(coin, 'reverse');
-    await subscribe('liquidations', callback, {'coin': convertedCoin});
+    // For WebSocket subscriptions, use the coin symbol directly without conversion
+    await subscribe('liquidations', callback, {'coin': coin});
   }
 
   /// Unsubscribe from liquidation events
@@ -489,12 +524,12 @@ class WebSocketSubscriptions {
   /// Subscribe to order book snapshots
   /// Provides periodic full order book snapshots
   Future<void> subscribeToOrderBookSnapshot(String coin, Function callback, {int? nSigFigs, int? mantissa}) async {
-    final convertedCoin = await symbolConversion.convertSymbol(coin, 'reverse');
-    final params = <String, dynamic>{'coin': convertedCoin};
-    
+    // For WebSocket subscriptions, use the coin symbol directly without conversion
+    final params = <String, dynamic>{'coin': coin};
+
     if (nSigFigs != null) params['nSigFigs'] = nSigFigs;
     if (mantissa != null) params['mantissa'] = mantissa;
-    
+
     await subscribe('orderBookSnapshot', callback, params);
   }
 
