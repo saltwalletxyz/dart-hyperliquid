@@ -255,6 +255,25 @@ await trader.exchange.scheduleOrder({
 
 ## 📡 Real-Time WebSocket Operations
 
+### ⚠️ **Important Update: WebSocket Subscription Fix**
+
+**Fixed in v0.0.1+**: Resolved 422 "Unprocessable Entity" errors in WebSocket subscriptions.
+
+**What was fixed:**
+- WebSocket subscription methods now use raw coin symbols (e.g., "BTC") instead of converted symbols
+- Removed incorrect symbol conversion that was causing API rejections
+- All subscription methods (`subscribeToCandle`, `subscribeToTrades`, etc.) now work correctly
+
+**Breaking change:** If you were previously using symbol conversion workarounds, you can now use the methods directly:
+
+```dart
+// ✅ Now works correctly
+await client.subscriptions.subscribeToCandle('BTC', '15m', callback);
+
+// ❌ Was causing 422 errors before the fix
+// await client.subscriptions.subscribe('candle', callback, {'coin': 'BTC-PERP', 'interval': '15m'});
+```
+
 ### WebSocket POST Trading (Ultra-Low Latency)
 
 ```dart
@@ -1505,6 +1524,7 @@ The `example/` directory contains comprehensive examples for different use cases
 ### Basic Examples
 - **`main.dart`** - Basic SDK usage and setup
 - **`comprehensive_example.dart`** - Complete API coverage demonstration
+- **`websocket_subscription_example.dart`** - WebSocket real-time data subscriptions (NEW!)
 - **`websocket_post_example.dart`** - WebSocket operations
 - **`custom_operations_example.dart`** - Custom trading operations
 
@@ -1529,6 +1549,10 @@ Each example includes:
 # Basic examples
 dart run example/main.dart
 dart run example/comprehensive_example.dart
+
+# WebSocket examples
+dart run example/websocket_subscription_example.dart  # Real-time market data
+dart run example/websocket_post_example.dart          # WebSocket POST operations
 
 # Production examples (with environment variables)
 export ENVIRONMENT=development

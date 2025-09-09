@@ -5,6 +5,21 @@ All notable changes to the Hyperliquid Dart SDK will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.1] - 2024-01-16
+
+### 🐛 Bug Fixes
+
+- **Fixed WebSocket Subscription 422 Errors**: Resolved critical issue where WebSocket subscription methods were incorrectly converting coin symbols, causing "Unprocessable Entity" errors. All subscription methods (`subscribeToCandle`, `subscribeToTrades`, `subscribeToL2Book`, etc.) now use raw coin symbols directly as expected by the Hyperliquid API.
+
+### 📚 Documentation
+
+- **Added WebSocket Subscription Example**: New comprehensive example (`websocket_subscription_example.dart`) demonstrating all WebSocket subscription methods with proper usage patterns.
+- **Updated README**: Added prominent notice about the WebSocket subscription fix and updated examples section.
+
+### 🔧 Technical Improvements
+
+- **Symbol Handling**: Removed incorrect symbol conversion from WebSocket subscription payloads, ensuring compatibility with Hyperliquid API expectations.
+
 ## [1.0.0] - 2024-01-15
 
 ### 🚀 Major Release - Production Ready

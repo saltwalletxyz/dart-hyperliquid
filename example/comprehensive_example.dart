@@ -201,26 +201,32 @@ Future<void> demonstrateWebSocketOperations(Hyperliquid client) async {
     // Subscribe to user events (orders, fills, etc.)
     if (client.walletAddress != null) {
       print('🔔 Subscribing to user events...');
-      await client.subscriptions.subscribe('user', (dynamic data) {
+      await client.subscriptions.subscribeToUserEvents(client.walletAddress!, (dynamic data) {
         client.structuredLogger.info('User event received', {
           'type': 'user_event',
           'data': data.toString(),
         });
         print('   📨 User Event: ${data.runtimeType}');
-      }, {'user': client.walletAddress});
+      });
     }
 
     // Subscribe to price updates
     print('💹 Subscribing to price updates...');
-    await client.subscriptions.subscribe('allMids', (dynamic data) {
+    await client.subscriptions.subscribeToAllMids((dynamic data) {
       print('   📈 Price update received');
     });
 
-    // Subscribe to trades for BTC-PERP
-    print('📊 Subscribing to BTC-PERP trades...');
-    await client.subscriptions.subscribe('trades', (dynamic data) {
+    // Subscribe to trades for BTC
+    print('📊 Subscribing to BTC trades...');
+    await client.subscriptions.subscribeToTrades('BTC', (dynamic data) {
       print('   🔄 Trade data received');
-    }, {'coin': 'BTC-PERP'});
+    });
+
+    // Subscribe to BTC candles (15m interval)
+    print('📈 Subscribing to BTC candles...');
+    await client.subscriptions.subscribeToCandle('BTC', '15m', (dynamic data) {
+      print('   🕯️ Candle data received');
+    });
 
     // Wait for some real-time data
     print('⏳ Listening for real-time data (5 seconds)...');
