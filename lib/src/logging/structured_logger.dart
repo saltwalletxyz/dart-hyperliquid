@@ -4,17 +4,6 @@ import 'package:logger/logger.dart';
 
 /// Production-grade structured logging system
 class StructuredLogger {
-  final Logger _logger;
-  final String _serviceName;
-  final String _version;
-  final Map<String, dynamic> _globalContext = {};
-
-  // Log configuration
-  bool _enableFileLogging = false;
-  bool _enableStructuredOutput = true;
-  String? _logFilePath;
-  IOSink? _logFile;
-
   StructuredLogger({
     required String serviceName,
     required String version,
@@ -36,6 +25,16 @@ class StructuredLogger {
     _initializeFileLogging();
     _setGlobalContext();
   }
+  final Logger _logger;
+  final String _serviceName;
+  final String _version;
+  final Map<String, dynamic> _globalContext = {};
+
+  // Log configuration
+  final bool _enableFileLogging;
+  final bool _enableStructuredOutput;
+  final String? _logFilePath;
+  IOSink? _logFile;
 
   /// Initialize file logging if enabled
   void _initializeFileLogging() {
@@ -286,10 +285,9 @@ class StructuredLogger {
 
 /// Custom printer for structured logging
 class _StructuredPrinter extends LogPrinter {
+  _StructuredPrinter(this.serviceName, this.version);
   final String serviceName;
   final String version;
-
-  _StructuredPrinter(this.serviceName, this.version);
 
   @override
   List<String> log(LogEvent event) {

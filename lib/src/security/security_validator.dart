@@ -280,9 +280,6 @@ class SecurityValidator {
 
 /// Validation result with severity levels
 class ValidationResult {
-  final bool isValid;
-  final String message;
-  final ValidationSeverity severity;
 
   const ValidationResult._(this.isValid, this.message, this.severity);
 
@@ -297,6 +294,9 @@ class ValidationResult {
   factory ValidationResult.error(String message) {
     return ValidationResult._(false, message, ValidationSeverity.error);
   }
+  final bool isValid;
+  final String message;
+  final ValidationSeverity severity;
 
   @override
   String toString() => '$severity: $message';

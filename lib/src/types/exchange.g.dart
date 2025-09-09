@@ -6,111 +6,84 @@ part of 'exchange.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$OrderResponseImpl _$$OrderResponseImplFromJson(Map<String, dynamic> json) =>
-    _$OrderResponseImpl(
+OrderResponse _$OrderResponseFromJson(Map<String, dynamic> json) =>
+    OrderResponse(
       status: json['status'] as String,
       response:
           OrderInnerResponse.fromJson(json['response'] as Map<String, dynamic>),
     );
 
-Map<String, dynamic> _$$OrderResponseImplToJson(_$OrderResponseImpl instance) =>
+Map<String, dynamic> _$OrderResponseToJson(OrderResponse instance) =>
     <String, dynamic>{
       'status': instance.status,
       'response': instance.response,
     };
 
-_$OrderInnerResponseImpl _$$OrderInnerResponseImplFromJson(
-        Map<String, dynamic> json) =>
-    _$OrderInnerResponseImpl(
+OrderInnerResponse _$OrderInnerResponseFromJson(Map<String, dynamic> json) =>
+    OrderInnerResponse(
       type: json['type'] as String,
       data: DataResponse.fromJson(json['data'] as Map<String, dynamic>),
     );
 
-Map<String, dynamic> _$$OrderInnerResponseImplToJson(
-        _$OrderInnerResponseImpl instance) =>
+Map<String, dynamic> _$OrderInnerResponseToJson(OrderInnerResponse instance) =>
     <String, dynamic>{
       'type': instance.type,
       'data': instance.data,
     };
 
-_$DataResponseImpl _$$DataResponseImplFromJson(Map<String, dynamic> json) =>
-    _$DataResponseImpl(
+DataResponse _$DataResponseFromJson(Map<String, dynamic> json) => DataResponse(
       statuses: (json['statuses'] as List<dynamic>)
           .map((e) => StatusResponse.fromJson(e as Map<String, dynamic>))
           .toList(),
     );
 
-Map<String, dynamic> _$$DataResponseImplToJson(_$DataResponseImpl instance) =>
+Map<String, dynamic> _$DataResponseToJson(DataResponse instance) =>
     <String, dynamic>{
       'statuses': instance.statuses,
     };
 
-_$RestingImpl _$$RestingImplFromJson(Map<String, dynamic> json) =>
-    _$RestingImpl(
-      RestingStatus.fromJson(json['resting'] as Map<String, dynamic>),
-      $type: json['runtimeType'] as String?,
+StatusResponse _$StatusResponseFromJson(Map<String, dynamic> json) =>
+    StatusResponse(
+      type: json['type'] as String,
+      resting: json['resting'] == null
+          ? null
+          : RestingStatus.fromJson(json['resting'] as Map<String, dynamic>),
+      filled: json['filled'] == null
+          ? null
+          : FilledStatus.fromJson(json['filled'] as Map<String, dynamic>),
+      error: json['error'] as String?,
+      status: json['status'] as String?,
     );
 
-Map<String, dynamic> _$$RestingImplToJson(_$RestingImpl instance) =>
+Map<String, dynamic> _$StatusResponseToJson(StatusResponse instance) =>
     <String, dynamic>{
+      'type': instance.type,
       'resting': instance.resting,
-      'runtimeType': instance.$type,
-    };
-
-_$FilledImpl _$$FilledImplFromJson(Map<String, dynamic> json) => _$FilledImpl(
-      FilledStatus.fromJson(json['filled'] as Map<String, dynamic>),
-      $type: json['runtimeType'] as String?,
-    );
-
-Map<String, dynamic> _$$FilledImplToJson(_$FilledImpl instance) =>
-    <String, dynamic>{
       'filled': instance.filled,
-      'runtimeType': instance.$type,
-    };
-
-_$ErrorImpl _$$ErrorImplFromJson(Map<String, dynamic> json) => _$ErrorImpl(
-      json['error'] as String,
-      $type: json['runtimeType'] as String?,
-    );
-
-Map<String, dynamic> _$$ErrorImplToJson(_$ErrorImpl instance) =>
-    <String, dynamic>{
       'error': instance.error,
-      'runtimeType': instance.$type,
-    };
-
-_$StatusImpl _$$StatusImplFromJson(Map<String, dynamic> json) => _$StatusImpl(
-      json['status'] as String,
-      $type: json['runtimeType'] as String?,
-    );
-
-Map<String, dynamic> _$$StatusImplToJson(_$StatusImpl instance) =>
-    <String, dynamic>{
       'status': instance.status,
-      'runtimeType': instance.$type,
     };
 
-_$RestingStatusImpl _$$RestingStatusImplFromJson(Map<String, dynamic> json) =>
-    _$RestingStatusImpl(
+RestingStatus _$RestingStatusFromJson(Map<String, dynamic> json) =>
+    RestingStatus(
       oid: (json['oid'] as num).toInt(),
       cloid: json['cloid'] as String?,
     );
 
-Map<String, dynamic> _$$RestingStatusImplToJson(_$RestingStatusImpl instance) =>
+Map<String, dynamic> _$RestingStatusToJson(RestingStatus instance) =>
     <String, dynamic>{
       'oid': instance.oid,
       'cloid': instance.cloid,
     };
 
-_$FilledStatusImpl _$$FilledStatusImplFromJson(Map<String, dynamic> json) =>
-    _$FilledStatusImpl(
+FilledStatus _$FilledStatusFromJson(Map<String, dynamic> json) => FilledStatus(
       oid: (json['oid'] as num).toInt(),
       avgPx: (json['avgPx'] as num).toDouble(),
       totalSz: (json['totalSz'] as num).toDouble(),
       cloid: json['cloid'] as String?,
     );
 
-Map<String, dynamic> _$$FilledStatusImplToJson(_$FilledStatusImpl instance) =>
+Map<String, dynamic> _$FilledStatusToJson(FilledStatus instance) =>
     <String, dynamic>{
       'oid': instance.oid,
       'avgPx': instance.avgPx,
@@ -118,13 +91,13 @@ Map<String, dynamic> _$$FilledStatusImplToJson(_$FilledStatusImpl instance) =>
       'cloid': instance.cloid,
     };
 
-_$CancelRequestImpl _$$CancelRequestImplFromJson(Map<String, dynamic> json) =>
-    _$CancelRequestImpl(
+CancelRequest _$CancelRequestFromJson(Map<String, dynamic> json) =>
+    CancelRequest(
       oid: (json['oid'] as num).toInt(),
       coin: (json['coin'] as num).toInt(),
     );
 
-Map<String, dynamic> _$$CancelRequestImplToJson(_$CancelRequestImpl instance) =>
+Map<String, dynamic> _$CancelRequestToJson(CancelRequest instance) =>
     <String, dynamic>{
       'oid': instance.oid,
       'coin': instance.coin,

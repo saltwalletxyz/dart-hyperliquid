@@ -6,8 +6,7 @@ part of 'order.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$OrderRequestImpl _$$OrderRequestImplFromJson(Map<String, dynamic> json) =>
-    _$OrderRequestImpl(
+OrderRequest _$OrderRequestFromJson(Map<String, dynamic> json) => OrderRequest(
       coin: json['coin'] as String,
       isBuy: json['isBuy'] as bool,
       sz: (json['sz'] as num).toDouble(),
@@ -17,7 +16,7 @@ _$OrderRequestImpl _$$OrderRequestImplFromJson(Map<String, dynamic> json) =>
       cloid: json['cloid'] as String?,
     );
 
-Map<String, dynamic> _$$OrderRequestImplToJson(_$OrderRequestImpl instance) =>
+Map<String, dynamic> _$OrderRequestToJson(OrderRequest instance) =>
     <String, dynamic>{
       'coin': instance.coin,
       'isBuy': instance.isBuy,
@@ -28,55 +27,40 @@ Map<String, dynamic> _$$OrderRequestImplToJson(_$OrderRequestImpl instance) =>
       'cloid': instance.cloid,
     };
 
-_$LimitOrderTypeImpl _$$LimitOrderTypeImplFromJson(Map<String, dynamic> json) =>
-    _$LimitOrderTypeImpl(
-      LimitOrderType.fromJson(json['limit'] as Map<String, dynamic>),
-      $type: json['runtimeType'] as String?,
+OrderType _$OrderTypeFromJson(Map<String, dynamic> json) => OrderType(
+      type: json['type'] as String,
+      limit: json['limit'] == null
+          ? null
+          : LimitOrderType.fromJson(json['limit'] as Map<String, dynamic>),
+      trigger: json['trigger'] == null
+          ? null
+          : TriggerOrderType.fromJson(json['trigger'] as Map<String, dynamic>),
     );
 
-Map<String, dynamic> _$$LimitOrderTypeImplToJson(
-        _$LimitOrderTypeImpl instance) =>
-    <String, dynamic>{
+Map<String, dynamic> _$OrderTypeToJson(OrderType instance) => <String, dynamic>{
+      'type': instance.type,
       'limit': instance.limit,
-      'runtimeType': instance.$type,
-    };
-
-_$TriggerOrderTypeImpl _$$TriggerOrderTypeImplFromJson(
-        Map<String, dynamic> json) =>
-    _$TriggerOrderTypeImpl(
-      TriggerOrderType.fromJson(json['trigger'] as Map<String, dynamic>),
-      $type: json['runtimeType'] as String?,
-    );
-
-Map<String, dynamic> _$$TriggerOrderTypeImplToJson(
-        _$TriggerOrderTypeImpl instance) =>
-    <String, dynamic>{
       'trigger': instance.trigger,
-      'runtimeType': instance.$type,
     };
 
-_$LimitOrderTypeDataImpl _$$LimitOrderTypeDataImplFromJson(
-        Map<String, dynamic> json) =>
-    _$LimitOrderTypeDataImpl(
+LimitOrderType _$LimitOrderTypeFromJson(Map<String, dynamic> json) =>
+    LimitOrderType(
       tif: json['tif'] as String,
     );
 
-Map<String, dynamic> _$$LimitOrderTypeDataImplToJson(
-        _$LimitOrderTypeDataImpl instance) =>
+Map<String, dynamic> _$LimitOrderTypeToJson(LimitOrderType instance) =>
     <String, dynamic>{
       'tif': instance.tif,
     };
 
-_$TriggerOrderTypeDataImpl _$$TriggerOrderTypeDataImplFromJson(
-        Map<String, dynamic> json) =>
-    _$TriggerOrderTypeDataImpl(
+TriggerOrderType _$TriggerOrderTypeFromJson(Map<String, dynamic> json) =>
+    TriggerOrderType(
       isMarket: json['isMarket'] as bool,
       triggerPx: (json['triggerPx'] as num).toDouble(),
       tpsl: json['tpsl'] as String,
     );
 
-Map<String, dynamic> _$$TriggerOrderTypeDataImplToJson(
-        _$TriggerOrderTypeDataImpl instance) =>
+Map<String, dynamic> _$TriggerOrderTypeToJson(TriggerOrderType instance) =>
     <String, dynamic>{
       'isMarket': instance.isMarket,
       'triggerPx': instance.triggerPx,

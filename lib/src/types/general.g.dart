@@ -6,31 +6,28 @@ part of 'general.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$AllMidsImpl _$$AllMidsImplFromJson(Map<String, dynamic> json) =>
-    _$AllMidsImpl(
+AllMids _$AllMidsFromJson(Map<String, dynamic> json) => AllMids(
       mids: Map<String, String>.from(json['mids'] as Map),
     );
 
-Map<String, dynamic> _$$AllMidsImplToJson(_$AllMidsImpl instance) =>
-    <String, dynamic>{
+Map<String, dynamic> _$AllMidsToJson(AllMids instance) => <String, dynamic>{
       'mids': instance.mids,
     };
 
-_$UserOpenOrdersImpl _$$UserOpenOrdersImplFromJson(Map<String, dynamic> json) =>
-    _$UserOpenOrdersImpl(
+UserOpenOrders _$UserOpenOrdersFromJson(Map<String, dynamic> json) =>
+    UserOpenOrders(
       orders: (json['orders'] as List<dynamic>)
           .map((e) => UserOpenOrder.fromJson(e as Map<String, dynamic>))
           .toList(),
     );
 
-Map<String, dynamic> _$$UserOpenOrdersImplToJson(
-        _$UserOpenOrdersImpl instance) =>
+Map<String, dynamic> _$UserOpenOrdersToJson(UserOpenOrders instance) =>
     <String, dynamic>{
       'orders': instance.orders,
     };
 
-_$UserOpenOrderImpl _$$UserOpenOrderImplFromJson(Map<String, dynamic> json) =>
-    _$UserOpenOrderImpl(
+UserOpenOrder _$UserOpenOrderFromJson(Map<String, dynamic> json) =>
+    UserOpenOrder(
       coin: json['coin'] as String,
       side: json['side'] as String,
       limitPx: (json['limitPx'] as num).toDouble(),
@@ -40,7 +37,7 @@ _$UserOpenOrderImpl _$$UserOpenOrderImplFromJson(Map<String, dynamic> json) =>
       origSz: json['origSz'] as String,
     );
 
-Map<String, dynamic> _$$UserOpenOrderImplToJson(_$UserOpenOrderImpl instance) =>
+Map<String, dynamic> _$UserOpenOrderToJson(UserOpenOrder instance) =>
     <String, dynamic>{
       'coin': instance.coin,
       'side': instance.side,
@@ -51,23 +48,20 @@ Map<String, dynamic> _$$UserOpenOrderImplToJson(_$UserOpenOrderImpl instance) =>
       'origSz': instance.origSz,
     };
 
-_$FrontendOpenOrdersImpl _$$FrontendOpenOrdersImplFromJson(
-        Map<String, dynamic> json) =>
-    _$FrontendOpenOrdersImpl(
+FrontendOpenOrders _$FrontendOpenOrdersFromJson(Map<String, dynamic> json) =>
+    FrontendOpenOrders(
       orders: (json['orders'] as List<dynamic>)
           .map((e) => FrontendOpenOrder.fromJson(e as Map<String, dynamic>))
           .toList(),
     );
 
-Map<String, dynamic> _$$FrontendOpenOrdersImplToJson(
-        _$FrontendOpenOrdersImpl instance) =>
+Map<String, dynamic> _$FrontendOpenOrdersToJson(FrontendOpenOrders instance) =>
     <String, dynamic>{
       'orders': instance.orders,
     };
 
-_$FrontendOpenOrderImpl _$$FrontendOpenOrderImplFromJson(
-        Map<String, dynamic> json) =>
-    _$FrontendOpenOrderImpl(
+FrontendOpenOrder _$FrontendOpenOrderFromJson(Map<String, dynamic> json) =>
+    FrontendOpenOrder(
       coin: json['coin'] as String,
       isPositionTpsl: json['isPositionTpsl'] as bool,
       isTrigger: json['isTrigger'] as bool,
@@ -83,8 +77,7 @@ _$FrontendOpenOrderImpl _$$FrontendOpenOrderImplFromJson(
       triggerPx: json['triggerPx'] as String,
     );
 
-Map<String, dynamic> _$$FrontendOpenOrderImplToJson(
-        _$FrontendOpenOrderImpl instance) =>
+Map<String, dynamic> _$FrontendOpenOrderToJson(FrontendOpenOrder instance) =>
     <String, dynamic>{
       'coin': instance.coin,
       'isPositionTpsl': instance.isPositionTpsl,
@@ -101,20 +94,17 @@ Map<String, dynamic> _$$FrontendOpenOrderImplToJson(
       'triggerPx': instance.triggerPx,
     };
 
-_$UserFillsImpl _$$UserFillsImplFromJson(Map<String, dynamic> json) =>
-    _$UserFillsImpl(
+UserFills _$UserFillsFromJson(Map<String, dynamic> json) => UserFills(
       fills: (json['fills'] as List<dynamic>)
           .map((e) => UserFill.fromJson(e as Map<String, dynamic>))
           .toList(),
     );
 
-Map<String, dynamic> _$$UserFillsImplToJson(_$UserFillsImpl instance) =>
-    <String, dynamic>{
+Map<String, dynamic> _$UserFillsToJson(UserFills instance) => <String, dynamic>{
       'fills': instance.fills,
     };
 
-_$UserFillImpl _$$UserFillImplFromJson(Map<String, dynamic> json) =>
-    _$UserFillImpl(
+UserFill _$UserFillFromJson(Map<String, dynamic> json) => UserFill(
       coin: json['coin'] as String,
       px: (json['px'] as num).toDouble(),
       sz: (json['sz'] as num).toDouble(),
@@ -130,8 +120,7 @@ _$UserFillImpl _$$UserFillImplFromJson(Map<String, dynamic> json) =>
       tid: (json['tid'] as num).toInt(),
     );
 
-Map<String, dynamic> _$$UserFillImplToJson(_$UserFillImpl instance) =>
-    <String, dynamic>{
+Map<String, dynamic> _$UserFillToJson(UserFill instance) => <String, dynamic>{
       'coin': instance.coin,
       'px': instance.px,
       'sz': instance.sz,
@@ -147,33 +136,32 @@ Map<String, dynamic> _$$UserFillImplToJson(_$UserFillImpl instance) =>
       'tid': instance.tid,
     };
 
-_$UserRateLimitImpl _$$UserRateLimitImplFromJson(Map<String, dynamic> json) =>
-    _$UserRateLimitImpl(
+UserRateLimit _$UserRateLimitFromJson(Map<String, dynamic> json) =>
+    UserRateLimit(
       nRequestsUsed: (json['nRequestsUsed'] as num).toInt(),
       nRequestsCap: (json['nRequestsCap'] as num).toInt(),
       cumVlm: (json['cumVlm'] as num).toDouble(),
     );
 
-Map<String, dynamic> _$$UserRateLimitImplToJson(_$UserRateLimitImpl instance) =>
+Map<String, dynamic> _$UserRateLimitToJson(UserRateLimit instance) =>
     <String, dynamic>{
       'nRequestsUsed': instance.nRequestsUsed,
       'nRequestsCap': instance.nRequestsCap,
       'cumVlm': instance.cumVlm,
     };
 
-_$OrderStatusImpl _$$OrderStatusImplFromJson(Map<String, dynamic> json) =>
-    _$OrderStatusImpl(
+OrderStatus _$OrderStatusFromJson(Map<String, dynamic> json) => OrderStatus(
       status: json['status'] as String,
       order: Order.fromJson(json['order'] as Map<String, dynamic>),
     );
 
-Map<String, dynamic> _$$OrderStatusImplToJson(_$OrderStatusImpl instance) =>
+Map<String, dynamic> _$OrderStatusToJson(OrderStatus instance) =>
     <String, dynamic>{
       'status': instance.status,
       'order': instance.order,
     };
 
-_$OrderImpl _$$OrderImplFromJson(Map<String, dynamic> json) => _$OrderImpl(
+Order _$OrderFromJson(Map<String, dynamic> json) => Order(
       coin: json['coin'] as String,
       side: json['side'] as String,
       limitPx: (json['limitPx'] as num).toDouble(),
@@ -190,8 +178,7 @@ _$OrderImpl _$$OrderImplFromJson(Map<String, dynamic> json) => _$OrderImpl(
       children: json['children'] as List<dynamic>,
     );
 
-Map<String, dynamic> _$$OrderImplToJson(_$OrderImpl instance) =>
-    <String, dynamic>{
+Map<String, dynamic> _$OrderToJson(Order instance) => <String, dynamic>{
       'coin': instance.coin,
       'side': instance.side,
       'limitPx': instance.limitPx,
@@ -208,7 +195,7 @@ Map<String, dynamic> _$$OrderImplToJson(_$OrderImpl instance) =>
       'children': instance.children,
     };
 
-_$L2BookImpl _$$L2BookImplFromJson(Map<String, dynamic> json) => _$L2BookImpl(
+L2Book _$L2BookFromJson(Map<String, dynamic> json) => L2Book(
       coin: json['coin'] as String,
       time: (json['time'] as num).toInt(),
       levels: (json['levels'] as List<dynamic>)
@@ -218,41 +205,38 @@ _$L2BookImpl _$$L2BookImplFromJson(Map<String, dynamic> json) => _$L2BookImpl(
           .toList(),
     );
 
-Map<String, dynamic> _$$L2BookImplToJson(_$L2BookImpl instance) =>
-    <String, dynamic>{
+Map<String, dynamic> _$L2BookToJson(L2Book instance) => <String, dynamic>{
       'coin': instance.coin,
       'time': instance.time,
       'levels': instance.levels,
     };
 
-_$L2BookLevelImpl _$$L2BookLevelImplFromJson(Map<String, dynamic> json) =>
-    _$L2BookLevelImpl(
+L2BookLevel _$L2BookLevelFromJson(Map<String, dynamic> json) => L2BookLevel(
       px: (json['px'] as num).toDouble(),
       sz: (json['sz'] as num).toDouble(),
       n: (json['n'] as num).toInt(),
     );
 
-Map<String, dynamic> _$$L2BookLevelImplToJson(_$L2BookLevelImpl instance) =>
+Map<String, dynamic> _$L2BookLevelToJson(L2BookLevel instance) =>
     <String, dynamic>{
       'px': instance.px,
       'sz': instance.sz,
       'n': instance.n,
     };
 
-_$CandleSnapshotImpl _$$CandleSnapshotImplFromJson(Map<String, dynamic> json) =>
-    _$CandleSnapshotImpl(
+CandleSnapshot _$CandleSnapshotFromJson(Map<String, dynamic> json) =>
+    CandleSnapshot(
       candles: (json['candles'] as List<dynamic>)
           .map((e) => Candle.fromJson(e as Map<String, dynamic>))
           .toList(),
     );
 
-Map<String, dynamic> _$$CandleSnapshotImplToJson(
-        _$CandleSnapshotImpl instance) =>
+Map<String, dynamic> _$CandleSnapshotToJson(CandleSnapshot instance) =>
     <String, dynamic>{
       'candles': instance.candles,
     };
 
-_$CandleImpl _$$CandleImplFromJson(Map<String, dynamic> json) => _$CandleImpl(
+Candle _$CandleFromJson(Map<String, dynamic> json) => Candle(
       t: (json['t'] as num).toInt(),
       T: (json['T'] as num).toInt(),
       s: json['s'] as String,
@@ -265,8 +249,7 @@ _$CandleImpl _$$CandleImplFromJson(Map<String, dynamic> json) => _$CandleImpl(
       n: (json['n'] as num).toInt(),
     );
 
-Map<String, dynamic> _$$CandleImplToJson(_$CandleImpl instance) =>
-    <String, dynamic>{
+Map<String, dynamic> _$CandleToJson(Candle instance) => <String, dynamic>{
       't': instance.t,
       'T': instance.T,
       's': instance.s,

@@ -1,189 +1,289 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:json_annotation/json_annotation.dart';
 
-part 'general.freezed.dart';
 part 'general.g.dart';
 
-@freezed
-class AllMids with _$AllMids {
-  const factory AllMids({
-    required Map<String, String> mids,
-  }) = _AllMids;
+@JsonSerializable()
+class AllMids {
+  final Map<String, String> mids;
+
+  const AllMids({
+    required this.mids,
+  });
 
   factory AllMids.fromJson(Map<String, dynamic> json) => _$AllMidsFromJson(json);
+  Map<String, dynamic> toJson() => _$AllMidsToJson(this);
 }
 
-@freezed
-class UserOpenOrders with _$UserOpenOrders {
-  const factory UserOpenOrders({
-    required List<UserOpenOrder> orders,
-  }) = _UserOpenOrders;
+@JsonSerializable()
+class UserOpenOrders {
+  final List<UserOpenOrder> orders;
+
+  const UserOpenOrders({
+    required this.orders,
+  });
 
   factory UserOpenOrders.fromJson(Map<String, dynamic> json) => _$UserOpenOrdersFromJson(json);
+  Map<String, dynamic> toJson() => _$UserOpenOrdersToJson(this);
 }
 
-@freezed
-class UserOpenOrder with _$UserOpenOrder {
-  const factory UserOpenOrder({
-    required String coin,
-    required String side,
-    required double limitPx,
-    required double sz,
-    required int oid,
-    required int timestamp,
-    required String origSz,
-  }) = _UserOpenOrder;
+@JsonSerializable()
+class UserOpenOrder {
+  final String coin;
+  final String side;
+  final double limitPx;
+  final double sz;
+  final int oid;
+  final int timestamp;
+  final String origSz;
+
+  const UserOpenOrder({
+    required this.coin,
+    required this.side,
+    required this.limitPx,
+    required this.sz,
+    required this.oid,
+    required this.timestamp,
+    required this.origSz,
+  });
 
   factory UserOpenOrder.fromJson(Map<String, dynamic> json) => _$UserOpenOrderFromJson(json);
+  Map<String, dynamic> toJson() => _$UserOpenOrderToJson(this);
 }
 
-@freezed
-class FrontendOpenOrders with _$FrontendOpenOrders {
-  const factory FrontendOpenOrders({
-    required List<FrontendOpenOrder> orders,
-  }) = _FrontendOpenOrders;
+@JsonSerializable()
+class FrontendOpenOrders {
+  final List<FrontendOpenOrder> orders;
+
+  const FrontendOpenOrders({
+    required this.orders,
+  });
 
   factory FrontendOpenOrders.fromJson(Map<String, dynamic> json) => _$FrontendOpenOrdersFromJson(json);
+  Map<String, dynamic> toJson() => _$FrontendOpenOrdersToJson(this);
 }
 
-@freezed
-class FrontendOpenOrder with _$FrontendOpenOrder {
-  const factory FrontendOpenOrder({
-    required String coin,
-    required bool isPositionTpsl,
-    required bool isTrigger,
-    required String limitPx,
-    required int oid,
-    required String orderType,
-    required String origSz,
-    required bool reduceOnly,
-    required String side,
-    required String sz,
-    required int timestamp,
-    required String triggerCondition,
-    required String triggerPx,
-  }) = _FrontendOpenOrder;
+@JsonSerializable()
+class FrontendOpenOrder {
+  final String coin;
+  final bool isPositionTpsl;
+  final bool isTrigger;
+  final String limitPx;
+  final int oid;
+  final String orderType;
+  final String origSz;
+  final bool reduceOnly;
+  final String side;
+  final String sz;
+  final int timestamp;
+  final String triggerCondition;
+  final String triggerPx;
+
+  const FrontendOpenOrder({
+    required this.coin,
+    required this.isPositionTpsl,
+    required this.isTrigger,
+    required this.limitPx,
+    required this.oid,
+    required this.orderType,
+    required this.origSz,
+    required this.reduceOnly,
+    required this.side,
+    required this.sz,
+    required this.timestamp,
+    required this.triggerCondition,
+    required this.triggerPx,
+  });
 
   factory FrontendOpenOrder.fromJson(Map<String, dynamic> json) => _$FrontendOpenOrderFromJson(json);
+  Map<String, dynamic> toJson() => _$FrontendOpenOrderToJson(this);
 }
 
-@freezed
-class UserFills with _$UserFills {
-  const factory UserFills({
-    required List<UserFill> fills,
-  }) = _UserFills;
+@JsonSerializable()
+class UserFills {
+  final List<UserFill> fills;
+
+  const UserFills({
+    required this.fills,
+  });
 
   factory UserFills.fromJson(Map<String, dynamic> json) => _$UserFillsFromJson(json);
+  Map<String, dynamic> toJson() => _$UserFillsToJson(this);
 }
 
-@freezed
-class UserFill with _$UserFill {
-  const factory UserFill({
-    required String coin,
-    required double px,
-    required double sz,
-    required String side,
-    required int time,
-    required String startPosition,
-    required String dir,
-    required double closedPnl,
-    required String hash,
-    required int oid,
-    required bool crossed,
-    required double fee,
-    required int tid,
-  }) = _UserFill;
+@JsonSerializable()
+class UserFill {
+  final String coin;
+  final double px;
+  final double sz;
+  final String side;
+  final int time;
+  final String startPosition;
+  final String dir;
+  final double closedPnl;
+  final String hash;
+  final int oid;
+  final bool crossed;
+  final double fee;
+  final int tid;
+
+  const UserFill({
+    required this.coin,
+    required this.px,
+    required this.sz,
+    required this.side,
+    required this.time,
+    required this.startPosition,
+    required this.dir,
+    required this.closedPnl,
+    required this.hash,
+    required this.oid,
+    required this.crossed,
+    required this.fee,
+    required this.tid,
+  });
 
   factory UserFill.fromJson(Map<String, dynamic> json) => _$UserFillFromJson(json);
+  Map<String, dynamic> toJson() => _$UserFillToJson(this);
 }
 
-@freezed
-class UserRateLimit with _$UserRateLimit {
-  const factory UserRateLimit({
-    required int nRequestsUsed,
-    required int nRequestsCap,
-    required double cumVlm,
-  }) = _UserRateLimit;
+@JsonSerializable()
+class UserRateLimit {
+  final int nRequestsUsed;
+  final int nRequestsCap;
+  final double cumVlm;
+
+  const UserRateLimit({
+    required this.nRequestsUsed,
+    required this.nRequestsCap,
+    required this.cumVlm,
+  });
 
   factory UserRateLimit.fromJson(Map<String, dynamic> json) => _$UserRateLimitFromJson(json);
+  Map<String, dynamic> toJson() => _$UserRateLimitToJson(this);
 }
 
-@freezed
-class OrderStatus with _$OrderStatus {
-  const factory OrderStatus({
-    required String status,
-    required Order order,
-  }) = _OrderStatus;
+@JsonSerializable()
+class OrderStatus {
+  final String status;
+  final Order order;
+
+  const OrderStatus({
+    required this.status,
+    required this.order,
+  });
 
   factory OrderStatus.fromJson(Map<String, dynamic> json) => _$OrderStatusFromJson(json);
+  Map<String, dynamic> toJson() => _$OrderStatusToJson(this);
 }
 
-@freezed
-class Order with _$Order {
-  const factory Order({
-    required String coin,
-    required String side,
-    required double limitPx,
-    required double sz,
-    required int oid,
-    required int timestamp,
-    required String origSz,
-    required bool reduceOnly,
-    required String orderType,
-    required bool isTrigger,
-    required double triggerPx,
-    required String triggerCondition,
-    required bool isPositionTpsl,
-    required List<dynamic> children,
-  }) = _Order;
+@JsonSerializable()
+class Order {
+  final String coin;
+  final String side;
+  final double limitPx;
+  final double sz;
+  final int oid;
+  final int timestamp;
+  final String origSz;
+  final bool reduceOnly;
+  final String orderType;
+  final bool isTrigger;
+  final double triggerPx;
+  final String triggerCondition;
+  final bool isPositionTpsl;
+  final List<dynamic> children;
+
+  const Order({
+    required this.coin,
+    required this.side,
+    required this.limitPx,
+    required this.sz,
+    required this.oid,
+    required this.timestamp,
+    required this.origSz,
+    required this.reduceOnly,
+    required this.orderType,
+    required this.isTrigger,
+    required this.triggerPx,
+    required this.triggerCondition,
+    required this.isPositionTpsl,
+    required this.children,
+  });
 
   factory Order.fromJson(Map<String, dynamic> json) => _$OrderFromJson(json);
+  Map<String, dynamic> toJson() => _$OrderToJson(this);
 }
 
-@freezed
-class L2Book with _$L2Book {
-  const factory L2Book({
-    required String coin,
-    required int time,
-    required List<List<L2BookLevel>> levels,
-  }) = _L2Book;
+@JsonSerializable()
+class L2Book {
+  final String coin;
+  final int time;
+  final List<List<L2BookLevel>> levels;
+
+  const L2Book({
+    required this.coin,
+    required this.time,
+    required this.levels,
+  });
 
   factory L2Book.fromJson(Map<String, dynamic> json) => _$L2BookFromJson(json);
+  Map<String, dynamic> toJson() => _$L2BookToJson(this);
 }
 
-@freezed
-class L2BookLevel with _$L2BookLevel {
-  const factory L2BookLevel({
-    required double px,
-    required double sz,
-    required int n,
-  }) = _L2BookLevel;
+@JsonSerializable()
+class L2BookLevel {
+  final double px;
+  final double sz;
+  final int n;
+
+  const L2BookLevel({
+    required this.px,
+    required this.sz,
+    required this.n,
+  });
 
   factory L2BookLevel.fromJson(Map<String, dynamic> json) => _$L2BookLevelFromJson(json);
+  Map<String, dynamic> toJson() => _$L2BookLevelToJson(this);
 }
 
-@freezed
-class CandleSnapshot with _$CandleSnapshot {
-  const factory CandleSnapshot({
-    required List<Candle> candles,
-  }) = _CandleSnapshot;
+@JsonSerializable()
+class CandleSnapshot {
+  final List<Candle> candles;
+
+  const CandleSnapshot({
+    required this.candles,
+  });
 
   factory CandleSnapshot.fromJson(Map<String, dynamic> json) => _$CandleSnapshotFromJson(json);
+  Map<String, dynamic> toJson() => _$CandleSnapshotToJson(this);
 }
 
-@freezed
-class Candle with _$Candle {
-  const factory Candle({
-    required int t,
-    required int T,
-    required String s,
-    required String i,
-    required double o,
-    required double c,
-    required double h,
-    required double l,
-    required double v,
-    required int n,
-  }) = _Candle;
+@JsonSerializable()
+class Candle {
+  final int t;
+  final int T;
+  final String s;
+  final String i;
+  final double o;
+  final double c;
+  final double h;
+  final double l;
+  final double v;
+  final int n;
+
+  const Candle({
+    required this.t,
+    required this.T,
+    required this.s,
+    required this.i,
+    required this.o,
+    required this.c,
+    required this.h,
+    required this.l,
+    required this.v,
+    required this.n,
+  });
 
   factory Candle.fromJson(Map<String, dynamic> json) => _$CandleFromJson(json);
+  Map<String, dynamic> toJson() => _$CandleToJson(this);
 }

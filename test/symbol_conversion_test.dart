@@ -1,6 +1,6 @@
-import 'package:test/test.dart';
-import 'package:hyperliquid/src/utils/symbol_conversion.dart';
 import 'package:hyperliquid/src/utils/rate_limiter.dart';
+import 'package:hyperliquid/src/utils/symbol_conversion.dart';
+import 'package:test/test.dart';
 
 void main() {
   test('symbol conversion returns mapping if provided manually', () async {

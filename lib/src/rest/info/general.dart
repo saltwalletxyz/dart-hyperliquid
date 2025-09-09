@@ -1,16 +1,16 @@
-import 'package:hyperliquid/src/utils/http_api.dart';
-import 'package:hyperliquid/src/utils/symbol_conversion.dart';
+import 'package:hyperliquid/src/constants.dart';
 // import 'package:hyperliquid/src/types/index.dart';
 import 'package:hyperliquid/src/hyperliquid_base.dart';
-import 'package:hyperliquid/src/constants.dart';
 import 'package:hyperliquid/src/types/general.dart';
+import 'package:hyperliquid/src/utils/http_api.dart';
+import 'package:hyperliquid/src/utils/symbol_conversion.dart';
 
 class GeneralInfoAPI {
+
+  GeneralInfoAPI(this.httpApi, this.symbolConversion, this.parent);
   final HttpApi httpApi;
   final SymbolConversion symbolConversion;
   final Hyperliquid parent;
-
-  GeneralInfoAPI(this.httpApi, this.symbolConversion, this.parent);
 
   Future<dynamic> getAllMids({bool rawResponse = false}) async {
     await parent.ensureInitialized();

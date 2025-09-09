@@ -1,11 +1,11 @@
+import 'package:hyperliquid/src/constants.dart';
 import 'package:hyperliquid/src/utils/http_api.dart';
 import 'package:hyperliquid/src/utils/symbol_conversion.dart';
-import 'package:hyperliquid/src/constants.dart';
 
 class SpotInfoAPI {
+  SpotInfoAPI(this.httpApi, this.symbolConversion);
   final HttpApi httpApi;
   final SymbolConversion symbolConversion;
-  SpotInfoAPI(this.httpApi, this.symbolConversion);
 
   Future<dynamic> getSpotMeta({bool rawResponse = false}) async {
     final response = await httpApi.makeRequest<dynamic>({'type': InfoType.spotMeta});

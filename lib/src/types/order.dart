@@ -1,47 +1,107 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:json_annotation/json_annotation.dart';
 
-part 'order.freezed.dart';
 part 'order.g.dart';
 
-@freezed
-class OrderRequest with _$OrderRequest {
-  const factory OrderRequest({
-    required String coin,
-    required bool isBuy,
-    required double sz,
-    required double limitPx,
-    required OrderType orderType,
-    required bool reduceOnly,
-    String? cloid,
-  }) = _OrderRequest;
+@JsonSerializable()
+class OrderRequest {
+  final String coin;
+  final bool isBuy;
+  final double sz;
+  final double limitPx;
+  final OrderType orderType;
+  final bool reduceOnly;
+  final String? cloid;
+
+  const OrderRequest({
+    required this.coin,
+    required this.isBuy,
+    required this.sz,
+    required this.limitPx,
+    required this.orderType,
+    required this.reduceOnly,
+    this.cloid,
+  });
 
   factory OrderRequest.fromJson(Map<String, dynamic> json) => _$OrderRequestFromJson(json);
+  Map<String, dynamic> toJson() => _$OrderRequestToJson(this);
 }
 
-@freezed
-class OrderType with _$OrderType {
-  const factory OrderType.limit(LimitOrderType limit) = _LimitOrderType;
-  const factory OrderType.trigger(TriggerOrderType trigger) = _TriggerOrderType;
+@JsonSerializable()
+class OrderType {
+  final String type;
+  final LimitOrderType? limit;
+  final TriggerOrderType? trigger;
 
-  factory OrderType.fromJson(Map<String, dynamic> json) => _$OrderTypeFromJson(json);
+  const OrderType({
+    required this.type,
+    this.limit,
+    this.trigger,
+  });
+
+  factory OrderType.limit(LimitOrderType limit) => OrderType(
+        type: 'limit',
+        limit: limit,
+      );
+
+  factory OrderType.trigger(TriggerOrderType trigger) => OrderType(
+        type: 'trigger',
+        trigger: trigger,
+      );
+
+  factory OrderType.fromJson(Map<String, dynamic> json) {
+    final type = json['type'] as String;
+    switch (type) {
+      case 'limit':
+        return OrderType.limit(
+          LimitOrderType.fromJson(json['limit'] as Map<String, dynamic>),
+        );
+      case 'trigger':
+        return OrderType.trigger(
+          TriggerOrderType.fromJson(json['trigger'] as Map<String, dynamic>),
+        );
+      default:
+        throw ArgumentError('Unknown OrderType type: $type');
+    }
+  }
+
+  Map<String, dynamic> toJson() {
+    final json = <String, dynamic>{'type': type};
+    switch (type) {
+      case 'limit':
+        json['limit'] = limit!.toJson();
+        break;
+      case 'trigger':
+        json['trigger'] = trigger!.toJson();
+        break;
+    }
+    return json;
+  }
 }
 
-@freezed
-class LimitOrderType with _$LimitOrderType {
-  const factory LimitOrderType({
-    required String tif,
-  }) = _LimitOrderTypeData;
+@JsonSerializable()
+class LimitOrderType {
+  final String tif;
+
+  const LimitOrderType({
+    required this.tif,
+  });
 
   factory LimitOrderType.fromJson(Map<String, dynamic> json) => _$LimitOrderTypeFromJson(json);
+  Map<String, dynamic> toJson() => _$LimitOrderTypeToJson(this);
 }
 
-@freezed
-class TriggerOrderType with _$TriggerOrderType {
-  const factory TriggerOrderType({
-    required bool isMarket,
-    required double triggerPx,
-    required String tpsl,
-  }) = _TriggerOrderTypeData;
+@JsonSerializable()
+class TriggerOrderType {
+  final bool isMarket;
+  final double triggerPx;
+  final String tpsl;
+
+  const TriggerOrderType({
+    required this.isMarket,
+    required this.triggerPx,
+    required this.tpsl,
+  });
 
   factory TriggerOrderType.fromJson(Map<String, dynamic> json) => _$TriggerOrderTypeFromJson(json);
+  Map<String, dynamic> toJson() => _$TriggerOrderTypeToJson(this);
 }

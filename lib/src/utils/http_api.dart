@@ -1,14 +1,15 @@
 import 'dart:convert';
+
 import 'package:http/http.dart' as http;
-import 'package:hyperliquid/src/utils/rate_limiter.dart';
 import 'package:hyperliquid/src/constants.dart';
+import 'package:hyperliquid/src/utils/rate_limiter.dart';
 
 class HttpApi {
+
+  HttpApi(this.baseUrl, this.endpoint, this.rateLimiter);
   final String baseUrl;
   final String endpoint;
   final RateLimiter rateLimiter;
-
-  HttpApi(this.baseUrl, this.endpoint, this.rateLimiter);
 
   Future<T> makeRequest<T>(
     dynamic payload, [

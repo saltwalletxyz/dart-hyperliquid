@@ -10,14 +10,6 @@ import '../utils/symbol_conversion.dart';
 /// bulk operations, and position management that are commonly needed
 /// for production trading applications.
 class CustomOperations {
-  final Hyperliquid _parent;
-  final ExchangeAPI _exchange;
-  final InfoAPI _infoApi;
-  final SymbolConversion _symbolConversion;
-  final String? _walletAddress;
-
-  /// Default slippage percentage (5%)
-  static const double defaultSlippage = 0.05;
 
   CustomOperations(
     this._parent,
@@ -26,6 +18,14 @@ class CustomOperations {
     this._symbolConversion,
     this._walletAddress,
   );
+  final Hyperliquid _parent;
+  final ExchangeAPI _exchange;
+  final InfoAPI _infoApi;
+  final SymbolConversion _symbolConversion;
+  final String? _walletAddress;
+
+  /// Default slippage percentage (5%)
+  static const double defaultSlippage = 0.05;
 
   /// Get the user's wallet address
   String _getUserAddress() {

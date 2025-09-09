@@ -1,5 +1,5 @@
-import 'package:test/test.dart';
 import 'package:hyperliquid/src/utils/rate_limiter.dart';
+import 'package:test/test.dart';
 
 void main() {
   test('rate limiter immediate token consumption', () async {

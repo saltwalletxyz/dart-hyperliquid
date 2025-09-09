@@ -4,6 +4,17 @@ import 'package:logger/logger.dart';
 
 /// Production-grade error handling and recovery system
 class ErrorHandler {
+
+  ErrorHandler({
+    bool enableAutoRecovery = true,
+    int maxRetryAttempts = 3,
+    Duration baseRetryDelay = const Duration(seconds: 1),
+  })  : _enableAutoRecovery = enableAutoRecovery,
+        _maxRetryAttempts = maxRetryAttempts,
+        _baseRetryDelay = baseRetryDelay {
+    _setupDefaultRecoveryStrategies();
+    _logger.i('ErrorHandler initialized - autoRecovery: $_enableAutoRecovery, maxRetries: $_maxRetryAttempts');
+  }
   final Logger _logger = Logger();
   final List<ErrorEvent> _errorHistory = [];
   final int _maxErrorHistory = 1000;
@@ -17,17 +28,6 @@ class ErrorHandler {
   // Error monitoring
   final Map<String, int> _errorCounts = {};
   final Map<String, DateTime> _lastErrorTimes = {};
-
-  ErrorHandler({
-    bool enableAutoRecovery = true,
-    int maxRetryAttempts = 3,
-    Duration baseRetryDelay = const Duration(seconds: 1),
-  })  : _enableAutoRecovery = enableAutoRecovery,
-        _maxRetryAttempts = maxRetryAttempts,
-        _baseRetryDelay = baseRetryDelay {
-    _setupDefaultRecoveryStrategies();
-    _logger.i('ErrorHandler initialized - autoRecovery: $_enableAutoRecovery, maxRetries: $_maxRetryAttempts');
-  }
 
   /// Handle an error with automatic recovery
   Future<T?> handleError<T>(
@@ -219,7 +219,7 @@ class ErrorHandler {
 
   /// Update error statistics
   void _updateErrorStats(String operation, dynamic error) {
-    final errorKey = '${operation}:${error.runtimeType}';
+    final errorKey = '$operation:${error.runtimeType}';
     _errorCounts[errorKey] = (_errorCounts[errorKey] ?? 0) + 1;
     _lastErrorTimes[errorKey] = DateTime.now();
   }
@@ -242,14 +242,6 @@ class ErrorHandler {
 
 /// Error event for tracking and analysis
 class ErrorEvent {
-  final String operation;
-  final dynamic error;
-  final StackTrace stackTrace;
-  final ErrorSeverity severity;
-  final Map<String, dynamic> context;
-  final DateTime timestamp;
-  final int attempt;
-  final int maxAttempts;
 
   ErrorEvent({
     required this.operation,
@@ -261,6 +253,14 @@ class ErrorEvent {
     required this.attempt,
     required this.maxAttempts,
   });
+  final String operation;
+  final dynamic error;
+  final StackTrace stackTrace;
+  final ErrorSeverity severity;
+  final Map<String, dynamic> context;
+  final DateTime timestamp;
+  final int attempt;
+  final int maxAttempts;
 
   @override
   String toString() => '${timestamp.toIso8601String()} [$severity] $operation: $error (attempt $attempt/$maxAttempts)';
